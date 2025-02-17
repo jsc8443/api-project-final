@@ -18,12 +18,37 @@ const getUsers = (request, response) => {
   };
   return jsonRespon(request, response, 200, responseJSON);
 };
+
+/// new user ----------> 201
+/// update age --------> 204
+/// missing name/age --> 400
 const addUser = (request, response) => {
-  const CONTENTPLACEHOLDER = {
-    message: 'holding space',
-    id: 'noID',
+  // store user data
+  const { name, age } = request.body;
+  if (!name|| !age) {  // missing info?
+    const responseJSON = {
+      message: 'Both name and age are required.',
+      id: 'addUserMissingParams',
+    };
+    return jsonRespon(request, response, 400, responseJSON);
+  }
+  if (users[name]) {      // existing user / updating age?
+    // update existing user
+    const updateUser = {
+      name,
+      age,
+    };
+    users[name] = updateUser;
+    return jsonRespon(request, response, 204, {});
+  }
+
+  // add new user
+  const newUser = {       // creating user
+    name,
+    age,
   };
-  return jsonRespon(request, response, 200, CONTENTPLACEHOLDER);
+  users[newUser.name] = newUser;
+  return jsonRespon(request, response, 201, newUser);
 };
 const notFound = (request, response) => {
   const responseJSON = {

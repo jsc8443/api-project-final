@@ -5,29 +5,66 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
-    const handleResponse = async (response) => {
+    const handleResponse = async (response, isMethodHead) => {
       // put content on the page
+      const content = document.querySelector('#content'); // content element reference
+      const header = document.createElement('h1');
+      const body = document.createElement('p');
+      // make header match status code
+      switch (response.status) {
+        case 200:
+          h1.innerHTML = '<h1>Success</h1>';
+          break;
+        case 201:
+          h1.innerHTML = '<h1>Created</h1>';
+          break;
+        case 204:
+          h1.innerHTML = '<h1>Updated (No Content)</h1>';
+          break;
+        case 400:
+          h1.innerHTML = '<h1>Bad Request</h1>';
+          break;
+        case 404:
+        default:
+          h1.innerHTML = '<h1>Not Found</h1>';
+          break;
+      }
+      // IF non-HEAD method THEN parse response and add body content
+      if (!isMethodHead) {
+        let obj = await response.json();
+        let jsonString = JSON.stringify(obj);
+        body.innerHTML = jsonString;
+      }
+      // clear content, add new elements
+      content.innerHTML = "";
+      content.appendChild(header);
+      content.appendChild(body);
     };
 
     const requestAdd = async (addForm) => {
+      const name = addForm.querySelector('#nameField').value;
+      const age = addForm.querySelector('#ageField').value;
+      const formData = `name=${name}&age=${age}`;
       const options = {
         method: 'post',
         headers: {'Accept': 'application/json'},
+        body: formData,
       };
 
       let response = await fetch('/addUser',options);
       handleResponse(response);
     };
+    
     const requestGet = async (getForm) => {
       const method = getForm.querySelector('#methodSelect').value;
       const url = getForm.querySelector('#urlField').value;
 
       let response = await fetch(url, {
-        method,
+        method, // GET or HEAD
         headers: {'Accept': 'application/json'},
       });
 
-      handleResponse(response/*, method ===''*/);
+      handleResponse(response, method === 'head');
     };
 
     const init = () => {
