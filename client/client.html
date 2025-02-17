@@ -5,7 +5,50 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const handleResponse = async (response) => {
+      // put content on the page
+    };
 
+    const requestAdd = async (addForm) => {
+      const options = {
+        method: 'post',
+        headers: {'Accept': 'application/json'},
+      };
+
+      let response = await fetch('/addUser',options);
+      handleResponse(response);
+    };
+    const requestGet = async (getForm) => {
+      const method = getForm.querySelector('#methodSelect').value;
+      const url = getForm.querySelector('#urlField').value;
+
+      let response = await fetch(url, {
+        method,
+        headers: {'Accept': 'application/json'},
+      });
+
+      handleResponse(response/*, method ===''*/);
+    };
+
+    const init = () => {
+      // set input element references
+      const addForm = document.querySelector("#nameForm");
+      const getForm = document.querySelector("#userForm");
+
+      const addUser = e => {
+        e.preventDefault();
+        requestAdd(addForm);
+        return false;
+      }
+      const getUsers = e => {
+        e.preventDefault();
+        requestGet(getForm);
+        return false;
+      }
+      addForm.addEventListener('submit', addUser);
+      getForm.addEventListener('submit', getUsers);
+    };
+    window.onload = init;
   </script>
 </head>
 <body>
