@@ -25,14 +25,14 @@ const getUsers = (request, response) => {
 const addUser = (request, response) => {
   // store user data
   const { name, age } = request.body;
-  if (!name|| !age) {  // missing info?
+  if (!name || !age) { // check if missing info
     const responseJSON = {
       message: 'Both name and age are required.',
       id: 'addUserMissingParams',
     };
     return jsonRespon(request, response, 400, responseJSON);
   }
-  if (users[name]) {      // existing user / updating age?
+  if (users[name]) { // existing user / updating age?
     // update existing user
     const updateUser = {
       name,
@@ -43,12 +43,13 @@ const addUser = (request, response) => {
   }
 
   // add new user
-  const newUser = {       // creating user
+  const newUser = { // creating user
     name,
     age,
   };
   users[newUser.name] = newUser;
-  return jsonRespon(request, response, 201, newUser);
+  const responseJSON = { message: 'Created successfully' };
+  return jsonRespon(request, response, 201, responseJSON);
 };
 const notFound = (request, response) => {
   const responseJSON = {

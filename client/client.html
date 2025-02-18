@@ -13,27 +13,26 @@
       // make header match status code
       switch (response.status) {
         case 200:
-          h1.innerHTML = '<h1>Success</h1>';
+          header.innerHTML = '<h1>Success</h1>';
           break;
         case 201:
-          h1.innerHTML = '<h1>Created</h1>';
+          header.innerHTML = '<h1>Created</h1>';
           break;
         case 204:
-          h1.innerHTML = '<h1>Updated (No Content)</h1>';
+          header.innerHTML = '<h1>Updated (No Content)</h1>';
           break;
         case 400:
-          h1.innerHTML = '<h1>Bad Request</h1>';
+          header.innerHTML = '<h1>Bad Request</h1>';
           break;
         case 404:
         default:
-          h1.innerHTML = '<h1>Not Found</h1>';
+          header.innerHTML = '<h1>Not Found</h1>';
           break;
       }
       // IF non-HEAD method THEN parse response and add body content
       if (!isMethodHead) {
         let obj = await response.json();
-        let jsonString = JSON.stringify(obj);
-        body.innerHTML = jsonString;
+        body.innerHTML = obj.message;
       }
       // clear content, add new elements
       content.innerHTML = "";
@@ -42,16 +41,37 @@
     };
 
     const requestAdd = async (addForm) => {
-      const name = addForm.querySelector('#nameField').value;
-      const age = addForm.querySelector('#ageField').value;
-      const formData = `name=${name}&age=${age}`;
-      const options = {
-        method: 'post',
-        headers: {'Accept': 'application/json'},
+      const nameField = addForm.querySelector('#nameField');
+      const ageField = addForm.querySelector('#ageField');
+      //const name = addForm.querySelector('#nameField').value;
+      //const age = addForm.querySelector('#ageField').value;
+      
+      const formData = `name=${nameField.value}&age=${ageField.value}`;
+      //const formData = `name=john&age=10`;
+      //const formData = new FormData(addForm);
+      //const formData = new FormData();
+      //formData.append("name", "jesus");
+      //formData.append("age", 31);
+      /*const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
         body: formData,
-      };
+      };*/
+      let response = await fetch('/addUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          //'Content-Type': 'application/multipart',
+          'Accept': 'application/json',
+        },
+        body: formData,
+      });
 
-      let response = await fetch('/addUser',options);
+      //let response = await fetch('/addUser',options);
+      //console.log(await response.json());
       handleResponse(response);
     };
     
@@ -64,7 +84,7 @@
         headers: {'Accept': 'application/json'},
       });
 
-      handleResponse(response, method === 'head');
+      handleResponse(response, method === 'HEAD');
     };
 
     const init = () => {
@@ -91,21 +111,21 @@
 <body>
   <section id="top">
     <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
+    <form id="nameForm" action="/addUser" method="POST">
       <label for="name">Name: </label>
       <input id="nameField" type="text" name="name" />
       <label for="age">Age: </label>
       <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
       <input type="submit" value="Add User" />
     </form>
-    <form id="userForm" action="/getUsers" method="get">
+    <form id="userForm" action="/getUsers" method="GET">
       <select id='urlField'>
         <option value='/getUsers'>/getUsers</option>
         <option value='/notReal'>/notReal</option>
       </select>
       <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
+        <option value="GET">GET</option>
+        <option value="HEAD">HEAD</option>
       </select>
       <input type="submit" value="Get User" />
     </form>
