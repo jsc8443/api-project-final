@@ -5,16 +5,6 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-/* const urlStruct = {
-  '/': htmlHandler.getIndex,
-  '/getUsers': jsonHandler.getUsers,
-  '/notReal': jsonHandler.notFound,
-  '/addUser': jsonHandler.addUser,
-  notFound: jsonHandler.notFound,
-  index: htmlHandler.getIndex,
-  '/style.css': htmlHandler.getStyle,
-}; */
-
 const parseBody = (request, response, handler) => {
   const body = [];
 
@@ -38,14 +28,14 @@ const parseBody = (request, response, handler) => {
 
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addUser') {
-    parseBody(request, response, jsonHandler.addUser);
+    parseBody(request, response, jsonHandler.writeUser);
   }
 };
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getStyle(request, response);
   } else if (parsedUrl.pathname === '/getUsers') {
-    jsonHandler.getUsers(request, response);
+    jsonHandler.readUsers(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {

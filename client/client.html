@@ -29,10 +29,15 @@
           header.innerHTML = '<h1>Not Found</h1>';
           break;
       }
+
       // IF non-HEAD method THEN parse response and add body content
-      if (!isMethodHead) {
+      if (!isMethodHead && response.status !== 204) {
         let obj = await response.json();
-        body.innerHTML = obj.message;
+        if (obj.message) {
+          body.innerHTML = obj.message;
+        } else {
+          body.innerHTML = JSON.stringify(obj.users);
+        }
       }
       // clear content, add new elements
       content.innerHTML = "";
@@ -43,36 +48,18 @@
     const requestAdd = async (addForm) => {
       const nameField = addForm.querySelector('#nameField');
       const ageField = addForm.querySelector('#ageField');
-      //const name = addForm.querySelector('#nameField').value;
-      //const age = addForm.querySelector('#ageField').value;
       
       const formData = `name=${nameField.value}&age=${ageField.value}`;
-      //const formData = `name=john&age=10`;
-      //const formData = new FormData(addForm);
-      //const formData = new FormData();
-      //formData.append("name", "jesus");
-      //formData.append("age", 31);
-      /*const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
-        },
-        body: formData,
-      };*/
       let response = await fetch('/addUser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          //'Content-Type': 'application/multipart',
           'Accept': 'application/json',
         },
         body: formData,
       });
-
-      //let response = await fetch('/addUser',options);
-      //console.log(await response.json());
-      handleResponse(response);
+ 
+      handleResponse(response, false); // false --> method other than 'HEAD'
     };
     
     const requestGet = async (getForm) => {
