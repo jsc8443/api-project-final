@@ -1,3 +1,19 @@
+/*
+ENDPOINTS:
+4+ GET endpoints
+  -support for HEAD requests
+  -retrieve different data
+  -1+ support query parameters
+    -filter/limit results
+  -never add/modify/remove data
+2+ POST endpoints
+  -add/edit data
+  -both JSON and urlencoded formats, parse on Content-Type
+all endpoints support and default JSON responses
+  -other support is optional, control in Accept header
+proper error handling for invalid, bad requests, etc
+404 for non-existent endpoint
+*/
 const http = require('http');
 const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
@@ -36,6 +52,8 @@ const handleGet = (request, response, parsedUrl) => {
     htmlHandler.getStyle(request, response);
   } else if (parsedUrl.pathname === '/getUsers') {
     jsonHandler.readUsers(request, response);
+  } else if (parsedUrl.pathname === '/getBooks') {
+    jsonHandler.getBooks(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {
@@ -48,6 +66,8 @@ const onRequest = (request, response) => {
   // parse url using built-in URL class
   const protocol = request.connection.encrypted ? 'https' : 'http';
   const parsedUrl = new URL(request.url, `${protocol}://${request.headers.host}`);
+  // forwards(?) search params
+  request.query = Object.fromEntries(parsedUrl.searchParams);
 
   if (request.method === 'POST') {
     handlePost(request, response, parsedUrl);

@@ -1,7 +1,7 @@
 {
-  "name": "http-api-assignment-ii",
+  "name": "api-project-1",
   "version": "1.0.0",
-  "description": "HTTP API assignment II",
+  "description": "API Project 1",
   "main": "'./src/server.js'",
   "scripts": {
     "start": "node ./src/server.js",
