@@ -29,29 +29,16 @@ const jsonRespon = (request, response, status, object) => {
 const getBooks = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
-  dataJSON.array.forEach((book) => {
+  Object.values(dataJSON).forEach((book) => {
     if ((!request.query.author || request.query.author === book.author)
       && (!request.query.country || request.query.country === book.country)
       && (!request.query.language || request.query.language === book.language)
       && (!request.query.title || request.query.title === book.title)
-      && (!request.query.year || request.query.year === book.year)
+      && (!request.query.year || Number(request.query.year) === book.year)
       && (!request.query.genre || book.genre.includes(request.query.genre))) {
       responseJSON[book.title] = book;
     }
   });
-  /* for (const b of dataJSON) {
-    // check each param, skip book if mismatch -> requires param exist
-    if ((request.query.author && request.query.author !== b.author)
-       || (request.query.country && request.query.country !== b.country)
-       || (request.query.language && request.query.language !== b.language)
-       || (request.query.title && request.query.title !== b.title)
-       || (request.query.year && request.query.year !== b.year)
-       || (request.query.genre && !b.genre.includes(request.query.genre))) {
-      continue;
-    }
-    // if all parameters met, add to response obj
-    responseJSON[b.title] = b;
-  } */
   return jsonRespon(request, response, 200, responseJSON);
 };
 

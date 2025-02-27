@@ -36,7 +36,8 @@
         if (obj.message) {
           body.innerHTML = obj.message;
         } else {
-          body.innerHTML = JSON.stringify(obj.users);
+          //body.innerHTML = JSON.stringify(obj.users);
+          body.innerHTML = JSON.stringify(obj);
         }
       }
       // clear content, add new elements
@@ -63,12 +64,22 @@
     };
     
     const requestGet = async (getForm) => {
+      const title = getForm.querySelector('#titleField');
+      const language = getForm.querySelector('#langField');
+      const year = getForm.querySelector('#yearField');
+
+      const formData = `?title=${title.value}&language=${language.value}&year=${year.value}`;
+      console.log(formData);
+
       const method = getForm.querySelector('#methodSelect').value;
       const url = getForm.querySelector('#urlField').value;
 
-      let response = await fetch(url, {
+      let response = await fetch(url + formData, {
         method, // GET or HEAD
-        headers: {'Accept': 'application/json'},
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
       });
 
       handleResponse(response, method === 'HEAD');
@@ -76,7 +87,7 @@
 
     const init = () => {
       // set input element references
-      const addForm = document.querySelector("#nameForm");
+      /*const addForm = document.querySelector("#nameForm");
       const getForm = document.querySelector("#userForm");
 
       const addUser = e => {
@@ -90,24 +101,46 @@
         return false;
       }
       addForm.addEventListener('submit', addUser);
-      getForm.addEventListener('submit', getUsers);
+      getForm.addEventListener('submit', getUsers);*/
+
+      const getBooksForm = document.querySelector("#getBooksForm");
+      const getBooks = e => {
+        e.preventDefault();
+        requestGet(getBooksForm);
+        return false;
+      }
+      getBooksForm.addEventListener('submit', getBooks);
     };
     window.onload = init;
   </script>
 </head>
 <body>
   <section id="top">
-    <h3>POST Status Code Tests</h3>
+    <h3>Book API</h3>
     <form id="nameForm" action="/addUser" method="POST">
       <label for="name">Name: </label>
       <input id="nameField" type="text" name="name" />
       <label for="age">Age: </label>
       <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
       <input type="submit" value="Add User" />
-    </form>
-    <form id="userForm" action="/getUsers" method="GET">
+    </form><br>
+
+
+
+
+    <form id="getBooksForm" action="/getBooks" method="GET">
+      <label for="title">Title: </label>
+      <input id="titleField" type="text" name="title" /><br>
+      <label for="language">Language: </label>
+      <input id="langField" type="text" name="language" /><br>
+      <label for="year">Year: </label>
+      <input id="yearField" type="number" name="year" /><br><br>
+
+
+
+
       <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
+        <option value='/getBooks'>/getBooks</option>
         <option value='/notReal'>/notReal</option>
       </select>
       <select id="methodSelect">

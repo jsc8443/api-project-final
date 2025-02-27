@@ -66,6 +66,7 @@ const onRequest = (request, response) => {
   // parse url using built-in URL class
   const protocol = request.connection.encrypted ? 'https' : 'http';
   const parsedUrl = new URL(request.url, `${protocol}://${request.headers.host}`);
+  request.type = request.headers.accept.split(',');
   // forwards(?) search params
   request.query = Object.fromEntries(parsedUrl.searchParams);
 
