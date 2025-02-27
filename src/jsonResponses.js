@@ -6,8 +6,9 @@ let obj;
 fs.readFile('file','utf8', (err,data) => {
   if (err) throw err;
   obj = JSON.parse(data);
-});*/
+}); */
 const fs = require('fs');
+
 const dataJSON = JSON.parse(fs.readFileSync(`${__dirname}/../data/books.json`));
 
 const users = {};
@@ -26,21 +27,31 @@ const jsonRespon = (request, response, status, object) => {
 };
 // book params: author, country, language, title, year, genre
 const getBooks = (request, response) => {
-  let responseJSON = {};
+  const responseJSON = {};
   // loop thru all books, adding queried to response list
-  for (const b of dataJson) {
+  dataJSON.array.forEach((book) => {
+    if ((!request.query.author || request.query.author === book.author)
+      && (!request.query.country || request.query.country === book.country)
+      && (!request.query.language || request.query.language === book.language)
+      && (!request.query.title || request.query.title === book.title)
+      && (!request.query.year || request.query.year === book.year)
+      && (!request.query.genre || book.genre.includes(request.query.genre))) {
+      responseJSON[book.title] = book;
+    }
+  });
+  /* for (const b of dataJSON) {
     // check each param, skip book if mismatch -> requires param exist
     if ((request.query.author && request.query.author !== b.author)
        || (request.query.country && request.query.country !== b.country)
        || (request.query.language && request.query.language !== b.language)
        || (request.query.title && request.query.title !== b.title)
        || (request.query.year && request.query.year !== b.year)
-       || (request.query.genre && !b.year.includes(request.query.genre))) {
-        continue;
+       || (request.query.genre && !b.genre.includes(request.query.genre))) {
+      continue;
     }
     // if all parameters met, add to response obj
     responseJSON[b.title] = b;
-  }
+  } */
   return jsonRespon(request, response, 200, responseJSON);
 };
 
@@ -90,5 +101,6 @@ const notFound = (request, response) => {
 module.exports = {
   readUsers,
   writeUser,
+  getBooks,
   notFound,
 };
