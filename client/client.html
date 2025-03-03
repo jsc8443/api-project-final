@@ -62,14 +62,37 @@
  
       handleResponse(response, false); // false --> method other than 'HEAD'
     };
-    
-    const requestGet = async (getForm) => {
+
+    /*const createFormData = form => {
       const title = getForm.querySelector('#titleField');
+      const author = getForm.querySelector('#authorField');
+      const genre = getForm.querySelector('#genreField');
       const language = getForm.querySelector('#langField');
+      const country = getForm.querySelector('#countryField');
       const year = getForm.querySelector('#yearField');
 
-      const formData = `?title=${title.value}&language=${language.value}&year=${year.value}`;
+      const formData = `?title=${title.value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
       console.log(formData);
+      return formData;
+    };*/
+    
+    //const requestGetBooks = async (getForm) => {
+    const requestGet = async (getForm) => {
+      let formData = '?';
+      if (getForm.querySelector('#titleField')) {
+        formData = `?title=${getForm.querySelector('#titleField').value}&`;
+      }
+      //const title = getForm.querySelector('#titleField');
+      const author = getForm.querySelector('#authorField');
+      const genre = getForm.querySelector('#genreField');
+      const language = getForm.querySelector('#langField');
+      const country = getForm.querySelector('#countryField');
+      const year = getForm.querySelector('#yearField');
+
+      formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
+      console.log(formData);
+
+      //formData = createFormData(getForm);
 
       const method = getForm.querySelector('#methodSelect').value;
       const url = getForm.querySelector('#urlField').value;
@@ -104,12 +127,39 @@
       getForm.addEventListener('submit', getUsers);*/
 
       const getBooksForm = document.querySelector("#getBooksForm");
+      const getBookForm = document.querySelector("#getBookForm");
+      const getTitlesForm = document.querySelector("#getTitlesForm");
+      const getTitleForm = document.querySelector("#getTitleForm");
+      
       const getBooks = e => {
         e.preventDefault();
+        //requestGetBooks(getBooksForm);
         requestGet(getBooksForm);
         return false;
-      }
+      };
+      const getBook = e => {
+        e.preventDefault();
+        //requestGetBooks(getBooksForm);
+        requestGet(getBookForm);
+        return false;
+      };
+      const getTitles = e => {
+        e.preventDefault();
+        //requestGetBooks(getBooksForm);
+        requestGet(getTitlesForm);
+        return false;
+      };
+      const getTitle = e => {
+        e.preventDefault();
+        //requestGetBooks(getBooksForm);
+        requestGet(getTitleForm);
+        return false;
+      };
+
       getBooksForm.addEventListener('submit', getBooks);
+      getBookForm.addEventListener('submit', getBook);
+      getTitlesForm.addEventListener('submit', getTitles);
+      getTitleForm.addEventListener('submit', getTitle);
     };
     window.onload = init;
   </script>
@@ -131,14 +181,16 @@
     <form id="getBooksForm" action="/getBooks" method="GET">
       <label for="title">Title: </label>
       <input id="titleField" type="text" name="title" /><br>
+      <label for="author">Author: </label>
+      <input id="authorField" type="text" name="author" /><br>
+      <label for="genre">Genre: </label>
+      <input id="genreField" type="text" name="genre" /><br>
       <label for="language">Language: </label>
       <input id="langField" type="text" name="language" /><br>
+      <label for="country">Country: </label>
+      <input id="countryField" type="text" name="country" /><br>
       <label for="year">Year: </label>
       <input id="yearField" type="number" name="year" /><br><br>
-
-
-
-
       <select id='urlField'>
         <option value='/getBooks'>/getBooks</option>
         <option value='/notReal'>/notReal</option>
@@ -147,7 +199,75 @@
         <option value="GET">GET</option>
         <option value="HEAD">HEAD</option>
       </select>
-      <input type="submit" value="Get User" />
+      <input type="submit" value="Get Books" />
+    </form>
+
+    <form id="getBookForm" action="/getBook" method="GET">
+      <label for="title">Title: </label>
+      <input id="titleField" type="text" name="title" /><br>
+      <label for="author">Author: </label>
+      <input id="authorField" type="text" name="author" /><br>
+      <label for="genre">Genre: </label>
+      <input id="genreField" type="text" name="genre" /><br>
+      <label for="language">Language: </label>
+      <input id="langField" type="text" name="language" /><br>
+      <label for="country">Country: </label>
+      <input id="countryField" type="text" name="country" /><br>
+      <label for="year">Year: </label>
+      <input id="yearField" type="number" name="year" /><br><br>
+      <select id='urlField'>
+        <option value='/getBook'>/getBook</option>
+        <option value='/notReal'>/notReal</option>
+      </select>
+      <select id="methodSelect">
+        <option value="GET">GET</option>
+        <option value="HEAD">HEAD</option>
+      </select>
+      <input type="submit" value="Get Book" />
+    </form>
+
+    <form id="getTitlesForm" action="/getTitles" method="GET">
+      <label for="author">Author: </label>
+      <input id="authorField" type="text" name="author" /><br>
+      <label for="genre">Genre: </label>
+      <input id="genreField" type="text" name="genre" /><br>
+      <label for="language">Language: </label>
+      <input id="langField" type="text" name="language" /><br>
+      <label for="country">Country: </label>
+      <input id="countryField" type="text" name="country" /><br>
+      <label for="year">Year: </label>
+      <input id="yearField" type="number" name="year" /><br><br>
+      <select id='urlField'>
+        <option value='/getTitles'>/getTitles</option>
+        <option value='/notReal'>/notReal</option>
+      </select>
+      <select id="methodSelect">
+        <option value="GET">GET</option>
+        <option value="HEAD">HEAD</option>
+      </select>
+      <input type="submit" value="Get Titles" />
+    </form>
+
+    <form id="getTitleForm" action="/getTitle" method="GET">
+      <label for="author">Author: </label>
+      <input id="authorField" type="text" name="author" /><br>
+      <label for="genre">Genre: </label>
+      <input id="genreField" type="text" name="genre" /><br>
+      <label for="language">Language: </label>
+      <input id="langField" type="text" name="language" /><br>
+      <label for="country">Country: </label>
+      <input id="countryField" type="text" name="country" /><br>
+      <label for="year">Year: </label>
+      <input id="yearField" type="number" name="year" /><br><br>
+      <select id='urlField'>
+        <option value='/getTitle'>/getTitle</option>
+        <option value='/notReal'>/notReal</option>
+      </select>
+      <select id="methodSelect">
+        <option value="GET">GET</option>
+        <option value="HEAD">HEAD</option>
+      </select>
+      <input type="submit" value="Get Title" />
     </form>
   </section>
   <section id="content">

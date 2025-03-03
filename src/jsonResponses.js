@@ -14,7 +14,7 @@ const dataJSON = JSON.parse(fs.readFileSync(`${__dirname}/../data/books.json`));
 const users = {};
 
 const jsonRespon = (request, response, status, object) => {
-  const content = JSON.stringify(object);
+  const content = JSON.stringify(Object.values(object));
   // console.log(content);
   response.writeHead(status, {
     'Content-Type': 'application/json',
@@ -25,18 +25,56 @@ const jsonRespon = (request, response, status, object) => {
   }
   response.end();
 };
+
+const filterIncludes = (query, book) => {
+  if ((!query.author || query.author === book.author)
+    && (!query.country || query.country === book.country)
+    && (!query.language || query.language === book.language)
+    && (!query.title || query.title === book.title)
+    && (!query.year || Number(query.year) === book.year)
+    && (!query.genre || (book.genres && book.genres.includes(query.genre)))) {
+    return true;
+  }
+  return false;
+};
+
 // book params: author, country, language, title, year, genre
 const getBooks = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
   Object.values(dataJSON).forEach((book) => {
-    if ((!request.query.author || request.query.author === book.author)
-      && (!request.query.country || request.query.country === book.country)
-      && (!request.query.language || request.query.language === book.language)
-      && (!request.query.title || request.query.title === book.title)
-      && (!request.query.year || Number(request.query.year) === book.year)
-      && (!request.query.genre || book.genre.includes(request.query.genre))) {
+    if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book;
+    }
+  });
+  return jsonRespon(request, response, 200, responseJSON);
+};
+const getBook = (request, response) => {
+  const responseJSON = {};
+  // loop thru all books, adding queried to response list
+  Object.values(dataJSON).forEach((book) => {
+    if (filterIncludes(request.query, book)) {
+      return jsonRespon(request, response, 200, book);
+    }
+  });
+  return jsonRespon(request, response, 200, responseJSON);
+};
+const getTitles = (request, response) => {
+  const responseJSON = {};
+  // loop thru all books, adding queried to response list
+  Object.values(dataJSON).forEach((book) => {
+    if (filterIncludes(request.query, book)) {
+      responseJSON[book.title] = book.title;
+    }
+  });
+  return jsonRespon(request, response, 200, responseJSON);
+};
+const getTitle = (request, response) => {
+  const responseJSON = {};
+  // loop thru all books, adding queried to response list
+  Object.values(dataJSON).forEach((book) => {
+    if (filterIncludes(request.query, book)) {
+      return jsonRespon(request, response, 200, book.title);
     }
   });
   return jsonRespon(request, response, 200, responseJSON);
@@ -89,5 +127,8 @@ module.exports = {
   readUsers,
   writeUser,
   getBooks,
+  getBook,
+  getTitles,
+  getTitle,
   notFound,
 };

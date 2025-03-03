@@ -54,6 +54,12 @@ const handleGet = (request, response, parsedUrl) => {
     jsonHandler.readUsers(request, response);
   } else if (parsedUrl.pathname === '/getBooks') {
     jsonHandler.getBooks(request, response);
+  } else if (parsedUrl.pathname === '/getBook') {
+    jsonHandler.getBook(request, response);
+  } else if (parsedUrl.pathname === '/getTitles') {
+    jsonHandler.getTitles(request, response);
+  } else if (parsedUrl.pathname === '/getTitle') {
+    jsonHandler.getTitle(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else {
