@@ -9,7 +9,7 @@ fs.readFile('file','utf8', (err,data) => {
 }); */
 const fs = require('fs');
 
-const dataJSON = JSON.parse(fs.readFileSync(`${__dirname}/../data/books.json`));
+const booksJSON = JSON.parse(fs.readFileSync(`${__dirname}/../data/books.json`));
 
 const users = {};
 
@@ -42,7 +42,7 @@ const filterIncludes = (query, book) => {
 const getBooks = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
-  Object.values(dataJSON).forEach((book) => {
+  Object.values(booksJSON).forEach((book) => {
     if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book;
     }
@@ -53,8 +53,8 @@ const getBook = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
   // array iteration: every instead of forEach
-  // Object.values(dataJSON).forEach((book) => {
-  Object.values(dataJSON).every((book) => {
+  // Object.values(booksJSON).forEach((book) => {
+  Object.values(booksJSON).every((book) => {
     if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book;
       return false;
@@ -67,7 +67,7 @@ const getBook = (request, response) => {
 const getTitles = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
-  Object.values(dataJSON).forEach((book) => {
+  Object.values(booksJSON).forEach((book) => {
     if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book.title;
     }
@@ -77,7 +77,7 @@ const getTitles = (request, response) => {
 const getTitle = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
-  Object.values(dataJSON).every((book) => {
+  Object.values(booksJSON).every((book) => {
     if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book.title;
       return false;
@@ -86,6 +86,42 @@ const getTitle = (request, response) => {
     return true;
   });
   return jsonRespon(request, response, 200, responseJSON);
+};
+
+const addBook = (request, response) => {
+  const {
+    title, author, genre, language, country, year,
+  } = request.body;
+  if (!title || !author) { // check if missing essential info
+    const responseJSON = {
+      message: 'Both title and author are required.',
+      id: 'addBookMissingParams',
+    };
+    return jsonRespon(request, response, 400, responseJSON);
+  } if (booksJSON[title]) { // update existing book
+    const updateBook = booksJSON[title];
+    updateBook.title = title;
+    updateBook.author = author;
+    updateBook.genres = genre;
+    updateBook.language = language;
+    updateBook.country = country;
+    updateBook.year = year;
+    booksJSON[title] = updateBook;
+    return jsonRespon(request, response, 204, updateBook);
+  }
+  const newBook = {
+    author,
+    country,
+    language,
+    link: '',
+    pages: null,
+    title,
+    year,
+    genres: genre,
+  };
+  booksJSON[title] = newBook;
+  const responseJSON = { message: 'Created successfully' };
+  return jsonRespon(request, response, 201, responseJSON);
 };
 
 const readUsers = (request, response) => {
@@ -138,5 +174,6 @@ module.exports = {
   getBook,
   getTitles,
   getTitle,
+  addBook,
   notFound,
 };

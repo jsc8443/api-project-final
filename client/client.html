@@ -46,7 +46,7 @@
       content.appendChild(body);
     };
 
-    const requestAdd = async (addForm) => {
+    const requestAddOLD = async (addForm) => {
       const nameField = addForm.querySelector('#nameField');
       const ageField = addForm.querySelector('#ageField');
       
@@ -60,6 +60,40 @@
         body: formData,
       });
  
+      handleResponse(response, false); // false --> method other than 'HEAD'
+    };
+
+    const requestAdd = async (addForm) => {
+      //let formData = '?';
+      //if (addForm.querySelector('#titleField')) {
+        //formData = `?title=${addForm.querySelector('#titleField').value}&`;
+      //}
+      const title = addForm.querySelector('#titleField');
+      const author = addForm.querySelector('#authorField');
+      const genre = addForm.querySelector('#genreField');
+      const language = addForm.querySelector('#langField');
+      const country = addForm.querySelector('#countryField');
+      const year = addForm.querySelector('#yearField');
+
+      //formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
+      const formData = `title=${title.value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
+      
+      console.log(formData);
+
+      //formData = createFormData(getForm);
+
+      //const method = getForm.querySelector('#methodSelect').value;
+      //const url = getForm.querySelector('#urlField').value;
+
+      let response = await fetch('/addBook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: formData,
+      });
+
       handleResponse(response, false); // false --> method other than 'HEAD'
     };
 
@@ -130,6 +164,8 @@
       const getBookForm = document.querySelector("#getBookForm");
       const getTitlesForm = document.querySelector("#getTitlesForm");
       const getTitleForm = document.querySelector("#getTitleForm");
+
+      const addBookForm = document.querySelector("#addBookForm");
       
       const getBooks = e => {
         e.preventDefault();
@@ -156,10 +192,19 @@
         return false;
       };
 
+      const addBook = e => {
+        e.preventDefault();
+        //requestGetBooks(getBooksForm);
+        requestAdd(addBookForm);
+        return false;
+      };
+
       getBooksForm.addEventListener('submit', getBooks);
       getBookForm.addEventListener('submit', getBook);
       getTitlesForm.addEventListener('submit', getTitles);
       getTitleForm.addEventListener('submit', getTitle);
+
+      addBookForm.addEventListener('submit', addBook);
     };
     window.onload = init;
   </script>
@@ -269,6 +314,23 @@
       </select>
       <input type="submit" value="Get Title" />
     </form>
+
+    <form id="addBookForm" action="/addBook" method="POST">
+      <label for="title">Title: </label>
+      <input id="titleField" type="text" name="title" /><br>
+      <label for="author">Author: </label>
+      <input id="authorField" type="text" name="author" /><br>
+      <label for="genre">Genre: </label>
+      <input id="genreField" type="text" name="genre" /><br>
+      <label for="language">Language: </label>
+      <input id="langField" type="text" name="language" /><br>
+      <label for="country">Country: </label>
+      <input id="countryField" type="text" name="country" /><br>
+      <label for="year">Year: </label>
+      <input id="yearField" type="number" name="year" /><br><br>
+      <input type="submit" value="Add Book" />
+    </form>
+
   </section>
   <section id="content">
   </section>
