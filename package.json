@@ -2,14 +2,23 @@
   "name": "api-project-1",
   "version": "1.0.0",
   "description": "API Project 1",
+  "homepage": "https://github.com/jsc8443/api-project-i#readme",
+  "bugs": {
+    "url": "https://github.com/jsc8443/api-project-i/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsc8443/api-project-i.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Jack Carter",
+  "type": "commonjs",
   "main": "'./src/server.js'",
   "scripts": {
     "start": "node ./src/server.js",
     "pretest": "eslint ./src --fix",
     "test": "echo \"Tests complete\""
   },
-  "author": "Jack Carter",
-  "license": "UNLICENSED",
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",

@@ -52,10 +52,15 @@ const getBooks = (request, response) => {
 const getBook = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
-  Object.values(dataJSON).forEach((book) => {
+  // array iteration: every instead of forEach
+  // Object.values(dataJSON).forEach((book) => {
+  Object.values(dataJSON).every((book) => {
     if (filterIncludes(request.query, book)) {
-      return jsonRespon(request, response, 200, book);
+      responseJSON[book.title] = book;
+      return false;
+      // return jsonRespon(request, response, 200, book);
     }
+    return true;
   });
   return jsonRespon(request, response, 200, responseJSON);
 };
@@ -72,10 +77,13 @@ const getTitles = (request, response) => {
 const getTitle = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
-  Object.values(dataJSON).forEach((book) => {
+  Object.values(dataJSON).every((book) => {
     if (filterIncludes(request.query, book)) {
-      return jsonRespon(request, response, 200, book.title);
+      responseJSON[book.title] = book.title;
+      return false;
+      // return jsonRespon(request, response, 200, book.title);
     }
+    return true;
   });
   return jsonRespon(request, response, 200, responseJSON);
 };
