@@ -27,6 +27,21 @@ const jsonRespon = (request, response, status, object) => {
   response.end();
 };
 
+const filterFilterFilter = (query) => JSON.parse(JSON.stringify(
+  Object.values(booksJSON).filter((book) => (!query.author || query.author === book.author)
+      && (!query.country || query.country === book.country)
+      && (!query.language || query.language === book.language)
+      && (!query.title || query.title === book.title)
+      && (!query.year || Number(query.year) === book.year)
+      && (!query.genre || (book.genres && book.genres.includes(query.genre)))),
+));
+
+// ISSUE: client page only displays values, missing keys
+//    --------> line 18, stringify in jsonRespon
+const findByTitle = (query) => JSON.parse(JSON.stringify(
+  Object.values(booksJSON).find((book) => query.title === book.title),
+));
+
 const filterIncludes = (query, book) => {
   if ((!query.author || query.author === book.author)
     && (!query.country || query.country === book.country)
@@ -55,7 +70,12 @@ const filterIncludes = (query, book) => {
 
 // book params: author, country, language, title, year, genre
 const getBooks = (request, response) => {
-  const responseJSON = {};
+  // const responseJSON = {};
+
+  // Array.filter
+  // const filterResults = Object.values(booksJSON).filter(filterIncludes())
+  const filterResults = filterFilterFilter(request.query);
+  // console.log(filterResults);
 
   // Array.filter ?? idfk come back to this
 
@@ -67,15 +87,16 @@ const getBooks = (request, response) => {
   }); */
 
   // loop thru all books, adding queried to response list
-  Object.values(booksJSON).forEach((book) => {
+  /* Object.values(booksJSON).forEach((book) => {
     if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book;
     }
-  });
-  return jsonRespon(request, response, 200, responseJSON);
+  }); */
+  // return jsonRespon(request, response, 200, responseJSON);
+  return jsonRespon(request, response, 200, filterResults);
 };
 const getBook = (request, response) => {
-  const responseJSON = {};
+  /* const responseJSON = {};
   // loop thru all books, adding queried to response list
   // array iteration: every instead of forEach
   // Object.values(booksJSON).forEach((book) => {
@@ -87,7 +108,9 @@ const getBook = (request, response) => {
     }
     return true;
   });
-  return jsonRespon(request, response, 200, responseJSON);
+  return jsonRespon(request, response, 200, responseJSON); */
+  const titleSearchResults = findByTitle(request.query);
+  return jsonRespon(request, response, 200, titleSearchResults);
 };
 const getTitles = (request, response) => {
   const responseJSON = {};
@@ -126,21 +149,21 @@ const addBook = (request, response) => {
     return jsonRespon(request, response, 400, responseJSON);
   } if (booksJSON[title]) { // update existing book
     const updateBook = booksJSON[title];
-    //updateBook.title = title;
-    //updateBook.author = author;
-    updateBook[genres] = genre;
-    updateBook[language] = language;
-    updateBook[country] = country;
-    updateBook[year] = year;
-    booksJSON[title] = updateBook;
+    // updateBook.title = title;
+    // updateBook.author = author;
+    updateBook.genres = genre;
+    updateBook.language = language;
+    updateBook.country = country;
+    updateBook.year = year;
+    booksJSON.title = updateBook;
     return jsonRespon(request, response, 204, updateBook);
   }
   const newBook = {
     author,
     country,
     language,
-    //,
-    //pages,
+    // ,
+    // pages,
     title,
     // parseInt(year),    // year is string, shouldnt be
     year,
@@ -165,7 +188,7 @@ const setStatus = (request, response) => {
   // console.log(booksJSON[title]);
   // if (!updateBook) { // check if book with that title exists
   // if (!booksJSON[title]) { // check if book with that title exists
-  if (/*filterIncludes*/false) { // check if book with that title exists
+  if (/* filterIncludes */false) { // check if book with that title exists
     const responseJSON = {
       message: 'No book with that title exists',
       id: 'bookNotFound',
