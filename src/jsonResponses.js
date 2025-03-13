@@ -102,6 +102,25 @@ const getBooks = (request, response) => {
   // return jsonRespon(request, response, 200, responseJSON);
   return jsonRespon(request, response, 200, filterResults);
 };
+const getRandom = (request, response) => {
+  // console.log(filterFilterFilter(request.query));
+  /* const boowomp = filterFilterFilter(request.query);
+  //console.log(boowomp);
+  const arrWomp = Object.values(boowomp);
+  //console.log(arrWomp);
+  const booCount = Math.random() * arrWomp.length
+  const randWomp = arrWomp[];
+  const placeholder = {}; */
+  const filterResults = filterFilterFilter(request.query);
+  const arrFilterResults = Object.values(filterResults);
+  // gets random book from filtered results
+  const randomResult = arrFilterResults[Math.floor(Math.random() * (arrFilterResults.length))];
+  // console.log(filterResults);
+  // console.log(arrFilterResults);
+  // console.log(randomResult);
+  return jsonRespon(request, response, 200, JSON.parse(JSON.stringify(randomResult)));
+  // return jsonRespon(request, response, 200, placeholder);
+};
 const getBook = (request, response) => {
   /* const responseJSON = {};
   // loop thru all books, adding queried to response list
@@ -116,14 +135,14 @@ const getBook = (request, response) => {
     return true;
   });
   return jsonRespon(request, response, 200, responseJSON); */
-  const titleSearchResults = findByTitle(request.query);
+  const titleSearchResults = findByTitle(request.query.title);
   return jsonRespon(request, response, 200, titleSearchResults);
 };
 const getTitles = (request, response) => {
   const responseJSON = {};
   // loop thru all books, adding queried to response list
   Object.values(booksJSON).forEach((book) => {
-    if (filterIncludes(request.query.title, book)) {
+    if (filterIncludes(request.query, book)) {
       responseJSON[book.title] = book.title;
     }
   });
@@ -252,6 +271,7 @@ module.exports = {
   writeUser,
   getBooks,
   getBook,
+  getRandom,
   getTitles,
   addBook,
   setStatus,

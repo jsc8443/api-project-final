@@ -154,7 +154,6 @@
           formData += '&';
         }
         formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
-
       }
       //const title = getForm.querySelector('#titleField');
       //const author = getForm.querySelector('#authorField');
@@ -164,8 +163,8 @@
       const year = getForm.querySelector('#yearField');
 
       formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
-      //const formData = `?title=${getForm.querySelector('#titleField').value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
-      console.log(formData);*/
+      //const formData = `?title=${getForm.querySelector('#titleField').value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;*/
+      console.log(formData);
 
       //formData = createFormData(getForm);
 
@@ -204,6 +203,7 @@
 
       const getBooksForm = document.querySelector("#getBooksForm");
       const getBookForm = document.querySelector("#getBookForm");
+      const randomForm = document.querySelector("#randomForm");
       const getTitlesForm = document.querySelector("#getTitlesForm");
       //const getTitleForm = document.querySelector("#getTitleForm");
 
@@ -220,6 +220,12 @@
         e.preventDefault();
         //requestGetBooks(getBooksForm);
         requestGet(getBookForm, '/getBook');
+        return false;
+      };
+      const getRandom = e => {
+        e.preventDefault();
+        //requestGetBooks(getBooksForm);
+        requestGet(randomForm, '/getRandom');
         return false;
       };
       const getTitles = e => {
@@ -250,6 +256,7 @@
 
       getBooksForm.addEventListener('submit', getBooks);
       getBookForm.addEventListener('submit', getBook);
+      randomForm.addEventListener('submit', getRandom);
       getTitlesForm.addEventListener('submit', getTitles);
       //getTitleForm.addEventListener('submit', getTitle);
 
@@ -302,6 +309,25 @@
       </select>
       <input type="submit" value="Get Book" />
     </form><br><br>
+
+    <form id="randomForm" action="/getRandom" method="GET" name="randomForm">
+      <label for="author">Author: </label>
+      <input id="authorField" type="text" name="author" /><br>
+      <label for="genre">Genre: </label>
+      <input id="genreField" type="text" name="genre" /><br>
+      <label for="language">Language: </label>
+      <input id="langField" type="text" name="language" /><br>
+      <label for="country">Country: </label>
+      <input id="countryField" type="text" name="country" /><br>
+      <label for="year">Year: </label>
+      <input id="yearField" type="number" name="year" /><br><br>
+      <select id="methodSelect">
+        <option value="GET">GET</option>
+        <option value="HEAD">HEAD</option>
+      </select>
+      <input type="submit" value="Get Random Book" />
+    </form>
+    <br><br>
 
     <form id="getTitlesForm" action="/getTitles" method="GET">
       <label for="author">Author: </label>

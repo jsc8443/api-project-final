@@ -6,6 +6,7 @@ ENDPOINTS:
     -->get all books matching search
     -->get single book by title
     -->get all book *titles* matching search which excludes title
+    -->get random book from search results
   -1+ support query parameters
     -filter/limit results
   -never add/modify/remove data
@@ -23,6 +24,7 @@ proper error handling for invalid, bad requests, etc
   --> get all books matching search
   --> get all titles matching search
   --> get single book by title
+  --> get random book from search results
 2+ POST endpoints
   --> add/edit book
   --> add/edit status
@@ -81,6 +83,9 @@ const handleGet = (request, response, parsedUrl) => {
       break;
     case '/getBook':
       jsonHandler.getBook(request, response);
+      break;
+    case '/getRandom':
+      jsonHandler.getRandom(request, response);
       break;
     case '/getTitles':
       jsonHandler.getTitles(request, response);
