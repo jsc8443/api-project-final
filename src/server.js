@@ -67,11 +67,9 @@ const handlePost = (request, response, parsedUrl) => {
       parseBody(request, response, jsonHandler.setStatus);
       break;
     default:
+      jsonHandler.notFound(request, response);
       break;
   }
-  /* if (parsedUrl.pathname === '/addUser') {
-    parseBody(request, response, jsonHandler.writeUser);
-  } */
 };
 const handleGet = (request, response, parsedUrl) => {
   switch (parsedUrl.pathname) {
@@ -90,9 +88,6 @@ const handleGet = (request, response, parsedUrl) => {
     case '/getTitles':
       jsonHandler.getTitles(request, response);
       break;
-    // case '/getTitle':
-      // jsonHandler.getTitle(request, response);
-      // break;
     case '/':
       htmlHandler.getIndex(request, response);
       break;
@@ -100,23 +95,6 @@ const handleGet = (request, response, parsedUrl) => {
       jsonHandler.notFound(request, response);
       break;
   }
-  /* if (parsedUrl.pathname === '/style.css') {
-    htmlHandler.getStyle(request, response);
-  } else if (parsedUrl.pathname === '/getUsers') {
-    jsonHandler.readUsers(request, response);
-  } else if (parsedUrl.pathname === c) {
-    jsonHandler.getBooks(request, response);
-  } else if (parsedUrl.pathname === '/getBook') {
-    jsonHandler.getBook(request, response);
-  } else if (parsedUrl.pathname === '/getTitles') {
-    jsonHandler.getTitles(request, response);
-  } else if (parsedUrl.pathname === '/getTitle') {
-    jsonHandler.getTitle(request, response);
-  } else if (parsedUrl.pathname === '/') {
-    htmlHandler.getIndex(request, response);
-  } else {
-    jsonHandler.notFound(request, response);
-  } */
 };
 
 const onRequest = (request, response) => {

@@ -36,7 +36,6 @@
         if (obj.message) {
           body.innerHTML = obj.message;
         } else {
-          //body.innerHTML = JSON.stringify(obj.users);
           body.innerHTML = JSON.stringify(obj);
         }
       }
@@ -46,28 +45,7 @@
       content.appendChild(body);
     };
 
-    const requestAddOLD = async (addForm) => {
-      const nameField = addForm.querySelector('#nameField');
-      const ageField = addForm.querySelector('#ageField');
-      
-      const formData = `name=${nameField.value}&age=${ageField.value}`;
-      let response = await fetch('/addUser', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
-        },
-        body: formData,
-      });
- 
-      handleResponse(response, false); // false --> method other than 'HEAD'
-    };
-
     const requestAdd = async (addForm) => {
-      //let formData = '?';
-      //if (addForm.querySelector('#titleField')) {
-        //formData = `?title=${addForm.querySelector('#titleField').value}&`;
-      //}
       const title = addForm.querySelector('#titleField');
       const author = addForm.querySelector('#authorField');
       const genre = addForm.querySelector('#genreField');
@@ -75,15 +53,9 @@
       const country = addForm.querySelector('#countryField');
       const year = addForm.querySelector('#yearField');
 
-      //formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
       const formData = `title=${title.value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
       
       console.log(formData);
-
-      //formData = createFormData(getForm);
-
-      //const method = getForm.querySelector('#methodSelect').value;
-      //const url = getForm.querySelector('#urlField').value;
 
       let response = await fetch('/addBook', {
         method: 'POST',
@@ -101,13 +73,7 @@
       const status = statusForm.querySelector('#statusField');
 
       const formData = `title=${title.value}&status=${status.value}`;
-      
       console.log(formData);
-
-      //formData = createFormData(getForm);
-
-      //const method = getForm.querySelector('#methodSelect').value;
-      //const url = getForm.querySelector('#urlField').value;
 
       let response = await fetch('/setStatus', {
         method: 'POST',
@@ -120,21 +86,7 @@
 
       handleResponse(response, false); // false --> method other than 'HEAD'
     };
-
-    /*const createFormData = form => {
-      const title = getForm.querySelector('#titleField');
-      const author = getForm.querySelector('#authorField');
-      const genre = getForm.querySelector('#genreField');
-      const language = getForm.querySelector('#langField');
-      const country = getForm.querySelector('#countryField');
-      const year = getForm.querySelector('#yearField');
-
-      const formData = `?title=${title.value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
-      console.log(formData);
-      return formData;
-    };*/
     
-    //const requestGetBooks = async (getForm) => {
     const requestGet = async (getForm, url) => {
 
       let formData = '?';
@@ -142,7 +94,6 @@
       const author = getForm.querySelector('#authorField');
 
       if (title) {    // WATCH OUT FOR FALSY VALUES !!!!!!!!!!!!!
-        //formData += `title=${getForm.querySelector('#titleField').value}`;
         formData += `title=${title.value}`;
       }
       if (author) {
@@ -155,23 +106,8 @@
         }
         formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
       }
-      //const title = getForm.querySelector('#titleField');
-      //const author = getForm.querySelector('#authorField');
-      /*const genre = getForm.querySelector('#genreField');
-      const language = getForm.querySelector('#langField');
-      const country = getForm.querySelector('#countryField');
-      const year = getForm.querySelector('#yearField');
-
-      formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
-      //const formData = `?title=${getForm.querySelector('#titleField').value}&author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;*/
-      console.log(formData);
-
-      //formData = createFormData(getForm);
-
+      //console.log(formData);
       const method = getForm.querySelector('#methodSelect').value;
-      //const url = getForm.action;
-      //const url = getForm.querySelector('#urlField').value;
-
       let response = await fetch(url + formData, {
         method, // GET or HEAD
         headers: {
@@ -185,71 +121,42 @@
 
     const init = () => {
       // set input element references
-      /*const addForm = document.querySelector("#nameForm");
-      const getForm = document.querySelector("#userForm");
-
-      const addUser = e => {
-        e.preventDefault();
-        requestAdd(addForm);
-        return false;
-      }
-      const getUsers = e => {
-        e.preventDefault();
-        requestGet(getForm);
-        return false;
-      }
-      addForm.addEventListener('submit', addUser);
-      getForm.addEventListener('submit', getUsers);*/
-
       const getBooksForm = document.querySelector("#getBooksForm");
       const getBookForm = document.querySelector("#getBookForm");
       const randomForm = document.querySelector("#randomForm");
       const getTitlesForm = document.querySelector("#getTitlesForm");
-      //const getTitleForm = document.querySelector("#getTitleForm");
 
       const addBookForm = document.querySelector("#addBookForm");
       const setStatusForm = document.querySelector("#setStatusForm");
       
       const getBooks = e => {
         e.preventDefault();
-        //requestGetBooks(getBooksForm);
         requestGet(getBooksForm, '/getBooks');
         return false;
       };
       const getBook = e => {
         e.preventDefault();
-        //requestGetBooks(getBooksForm);
         requestGet(getBookForm, '/getBook');
         return false;
       };
       const getRandom = e => {
         e.preventDefault();
-        //requestGetBooks(getBooksForm);
         requestGet(randomForm, '/getRandom');
         return false;
       };
       const getTitles = e => {
         e.preventDefault();
-        //requestGetBooks(getBooksForm);
         requestGet(getTitlesForm, '/getTitles');
         return false;
       };
-      /*const getTitle = e => {
-        e.preventDefault();
-        //requestGetBooks(getBooksForm);
-        requestGet(getTitleForm);
-        return false;
-      };*/
 
       const addBook = e => {
         e.preventDefault();
-        //requestGetBooks(getBooksForm);
         requestAdd(addBookForm);
         return false;
       };
       const setStatus = e => {
         e.preventDefault();
-        //requestGetBooks(getBooksForm);
         requestSet(setStatusForm);
         return false;
       };
@@ -258,7 +165,6 @@
       getBookForm.addEventListener('submit', getBook);
       randomForm.addEventListener('submit', getRandom);
       getTitlesForm.addEventListener('submit', getTitles);
-      //getTitleForm.addEventListener('submit', getTitle);
 
       addBookForm.addEventListener('submit', addBook);
       setStatusForm.addEventListener('submit', setStatus);
@@ -269,17 +175,6 @@
 <body>
   <section id="top">
     <h3>Book API</h3>
-    <form id="nameForm" action="/addUser" method="POST">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
-    </form><br>
-    <br><br>
-
-
-
     <form id="getBooksForm" action="/getBooks" method="GET" name="booksForm">
       <label for="title">Title: </label>
       <input id="titleField" type="text" name="title" /><br>
