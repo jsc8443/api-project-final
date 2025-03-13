@@ -96,6 +96,30 @@
 
       handleResponse(response, false); // false --> method other than 'HEAD'
     };
+    const requestSet = async (statusForm) => {
+      const title = statusForm.querySelector('#titleField');
+      const status = statusForm.querySelector('#statusField');
+
+      const formData = `title=${title.value}&status=${status.value}`;
+      
+      console.log(formData);
+
+      //formData = createFormData(getForm);
+
+      //const method = getForm.querySelector('#methodSelect').value;
+      //const url = getForm.querySelector('#urlField').value;
+
+      let response = await fetch('/setStatus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: formData,
+      });
+
+      handleResponse(response, false); // false --> method other than 'HEAD'
+    };
 
     /*const createFormData = form => {
       const title = getForm.querySelector('#titleField');
@@ -166,6 +190,7 @@
       const getTitleForm = document.querySelector("#getTitleForm");
 
       const addBookForm = document.querySelector("#addBookForm");
+      const setStatusForm = document.querySelector("#setStatusForm");
       
       const getBooks = e => {
         e.preventDefault();
@@ -198,6 +223,12 @@
         requestAdd(addBookForm);
         return false;
       };
+      const setStatus = e => {
+        e.preventDefault();
+        //requestGetBooks(getBooksForm);
+        requestSet(setStatusForm);
+        return false;
+      };
 
       getBooksForm.addEventListener('submit', getBooks);
       getBookForm.addEventListener('submit', getBook);
@@ -205,6 +236,7 @@
       getTitleForm.addEventListener('submit', getTitle);
 
       addBookForm.addEventListener('submit', addBook);
+      setStatusForm.addEventListener('submit', setStatus);
     };
     window.onload = init;
   </script>
@@ -219,7 +251,7 @@
       <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
       <input type="submit" value="Add User" />
     </form><br>
-
+    <br><br>
 
 
 
@@ -246,7 +278,7 @@
       </select>
       <input type="submit" value="Get Books" />
     </form>
-
+    <br><br>
     <form id="getBookForm" action="/getBook" method="GET">
       <label for="title">Title: </label>
       <input id="titleField" type="text" name="title" /><br>
@@ -269,7 +301,7 @@
         <option value="HEAD">HEAD</option>
       </select>
       <input type="submit" value="Get Book" />
-    </form>
+    </form><br><br>
 
     <form id="getTitlesForm" action="/getTitles" method="GET">
       <label for="author">Author: </label>
@@ -291,7 +323,7 @@
         <option value="HEAD">HEAD</option>
       </select>
       <input type="submit" value="Get Titles" />
-    </form>
+    </form><br><br>
 
     <form id="getTitleForm" action="/getTitle" method="GET">
       <label for="author">Author: </label>
@@ -313,7 +345,7 @@
         <option value="HEAD">HEAD</option>
       </select>
       <input type="submit" value="Get Title" />
-    </form>
+    </form><br><br>
 
     <form id="addBookForm" action="/addBook" method="POST">
       <label for="title">Title: </label>
@@ -329,7 +361,18 @@
       <label for="year">Year: </label>
       <input id="yearField" type="number" name="year" /><br><br>
       <input type="submit" value="Add Book" />
-    </form>
+    </form><br><br>
+
+    <form id="setStatusForm" action="/setStatus" method="POST">
+      <label for="title">Title: </label>
+      <input id="titleField" type="text" name="title" /><br>
+      <select id="statusField">
+        <option value="unread">Unread</option>
+        <option value="toRead">To read</option>
+        <option value="read">Read</option>
+      </select>
+      <input type="submit" value="Set Status" />
+    </form><br><br>
 
   </section>
   <section id="content">

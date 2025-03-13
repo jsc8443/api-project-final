@@ -47,6 +47,9 @@ const handlePost = (request, response, parsedUrl) => {
     case '/addBook':
       parseBody(request, response, jsonHandler.addBook);
       break;
+    case '/setStatus':
+      parseBody(request, response, jsonHandler.setStatus);
+      break;
     default:
       break;
   }
