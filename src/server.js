@@ -3,16 +3,30 @@ ENDPOINTS:
 4+ GET endpoints
   -support for HEAD requests
   -retrieve different data
+    -->get all books matching search
+    -->get single book by title
+    -->get all book *titles* matching search which excludes title
   -1+ support query parameters
     -filter/limit results
   -never add/modify/remove data
 2+ POST endpoints
   -add/edit data
+    -->add/edit book
+    -->add/edit status
   -both JSON and urlencoded formats, parse on Content-Type
-all endpoints support and default JSON responses
+all endpoints support and default to JSON responses
   -other support is optional, control in Accept header
 proper error handling for invalid, bad requests, etc
 404 for non-existent endpoint
+
+4+ GET endpoints
+  --> get all books matching search
+  --> get all titles matching search
+  --> get single book by title
+2+ POST endpoints
+  --> add/edit book
+  --> add/edit status
+
 */
 const http = require('http');
 const query = require('querystring');
@@ -71,9 +85,9 @@ const handleGet = (request, response, parsedUrl) => {
     case '/getTitles':
       jsonHandler.getTitles(request, response);
       break;
-    case '/getTitle':
-      jsonHandler.getTitle(request, response);
-      break;
+    // case '/getTitle':
+      // jsonHandler.getTitle(request, response);
+      // break;
     case '/':
       htmlHandler.getIndex(request, response);
       break;
