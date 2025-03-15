@@ -3,30 +3,55 @@
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <script>
     const handleResponse = async (response, isMethodHead) => {
       // put content on the page
       const content = document.querySelector('#content'); // content element reference
-      const header = document.createElement('h1');
-      const body = document.createElement('p');
+      const resultsHeader = document.querySelector('#resultsHeader');
+      const resultsTitle = document.querySelector('#resultsTitle');
+      const resultsContent = document.querySelector('#resultsContent');
+      /*const cardHeader = document.createElement('header');
+      const resultsTitle = document.createElement('p');
+      const resultsContent = document.createElement('p');
+      const cardBody = document.createElement('p');
+      //header.classList.toggle('title');
+      //header.classList.toggle('is-4');
+      //header.classList.toggle('has-text-centered');
+      header.classList.toggle('card-header');
+      header.classList.toggle('has-background-link');
+      title.classList.toggle('card-header-title');
+      title.classList.toggle('has-text-white-ter');
+      body.classList.toggle('is-family-code');
+      body.classList.toggle('box');
+      body.classList.toggle('has-background-grey-lighter');*/
       // make header match status code
       switch (response.status) {
         case 200:
-          header.innerHTML = '<h1>Success</h1>';
+          resultsTitle.innerHTML = 'Success';
+          resultsHeader.className = 'card-header has-background-success';
+          resultsTitle.className = 'card-header-title has-text-success-invert';
           break;
         case 201:
-          header.innerHTML = '<h1>Created</h1>';
+          resultsTitle.innerHTML = 'Created';
+          resultsHeader.className = 'card-header has-background-success';
+          resultsTitle.className = 'card-header-title has-text-success-invert';
           break;
         case 204:
-          header.innerHTML = '<h1>Updated (No Content)</h1>';
+          resultsTitle.innerHTML = 'Updated (No Content)';
+          resultsHeader.className = 'card-header has-background-success';
+          resultsTitle.className = 'card-header-title has-text-success-invert';
           break;
         case 400:
-          header.innerHTML = '<h1>Bad Request</h1>';
+          resultsTitle.innerHTML = 'Bad Request';
+          resultsHeader.className = 'card-header has-background-danger';
+          resultsTitle.className = 'card-header-title has-text-danger-invert';
           break;
         case 404:
         default:
-          header.innerHTML = '<h1>Not Found</h1>';
+          resultsTitle.innerHTML = 'Not Found';
+          resultsHeader.className = 'card-header has-background-danger';
+          resultsTitle.className = 'card-header-title has-text-danger-invert';
           break;
       }
 
@@ -34,15 +59,16 @@
       if (!isMethodHead && response.status !== 204) {
         let obj = await response.json();
         if (obj.message) {
-          body.innerHTML = obj.message;
+          resultsContent.innerHTML = obj.message;
         } else {
-          body.innerHTML = JSON.stringify(obj);
+          resultsContent.innerHTML = JSON.stringify(obj);
         }
       }
+      content.className = "";
       // clear content, add new elements
-      content.innerHTML = "";
-      content.appendChild(header);
-      content.appendChild(body);
+      //content.innerHTML = "";
+      //content.appendChild(resultsTitle);
+      //content.appendChild(resultsContent);
     };
 
     const requestAdd = async (addForm) => {
@@ -172,109 +198,147 @@
     window.onload = init;
   </script>
 </head>
+<!--body class="has-background-grey-lighter"-->
 <body>
-  <section id="top">
-    <h3>Book API</h3>
-    <form id="getBooksForm" action="/getBooks" method="GET" name="booksForm">
-      <label for="title">Title: </label>
-      <input id="titleField" type="text" name="title" /><br>
-      <label for="author">Author: </label>
-      <input id="authorField" type="text" name="author" /><br>
-      <label for="genre">Genre: </label>
-      <input id="genreField" type="text" name="genre" /><br>
-      <label for="language">Language: </label>
-      <input id="langField" type="text" name="language" /><br>
-      <label for="country">Country: </label>
-      <input id="countryField" type="text" name="country" /><br>
-      <label for="year">Year: </label>
-      <input id="yearField" type="number" name="year" /><br><br>
-      <select id="methodSelect">
-        <option value="GET">GET</option>
-        <option value="HEAD">HEAD</option>
-      </select>
-      <input type="submit" value="Get Books" />
-    </form>
-    <br><br>
-    <form id="getBookForm" action="/getBook" method="GET">
-      <label for="title">Title: </label>
-      <input id="titleField" type="text" name="title" /><br>
-      <select id="methodSelect">
-        <option value="GET">GET</option>
-        <option value="HEAD">HEAD</option>
-      </select>
-      <input type="submit" value="Get Book" />
-    </form><br><br>
-
-    <form id="randomForm" action="/getRandom" method="GET" name="randomForm">
-      <label for="author">Author: </label>
-      <input id="authorField" type="text" name="author" /><br>
-      <label for="genre">Genre: </label>
-      <input id="genreField" type="text" name="genre" /><br>
-      <label for="language">Language: </label>
-      <input id="langField" type="text" name="language" /><br>
-      <label for="country">Country: </label>
-      <input id="countryField" type="text" name="country" /><br>
-      <label for="year">Year: </label>
-      <input id="yearField" type="number" name="year" /><br><br>
-      <select id="methodSelect">
-        <option value="GET">GET</option>
-        <option value="HEAD">HEAD</option>
-      </select>
-      <input type="submit" value="Get Random Book" />
-    </form>
-    <br><br>
-
-    <form id="getTitlesForm" action="/getTitles" method="GET">
-      <label for="author">Author: </label>
-      <input id="authorField" type="text" name="author" /><br>
-      <label for="genre">Genre: </label>
-      <input id="genreField" type="text" name="genre" /><br>
-      <label for="language">Language: </label>
-      <input id="langField" type="text" name="language" /><br>
-      <label for="country">Country: </label>
-      <input id="countryField" type="text" name="country" /><br>
-      <label for="year">Year: </label>
-      <input id="yearField" type="number" name="year" /><br><br>
-      <select id='urlField'>
-        <option value='/getTitles'>/getTitles</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="GET">GET</option>
-        <option value="HEAD">HEAD</option>
-      </select>
-      <input type="submit" value="Get Titles" />
-    </form><br><br>
-
-    <form id="addBookForm" action="/addBook" method="POST">
-      <label for="title">Title: </label>
-      <input id="titleField" type="text" name="title" /><br>
-      <label for="author">Author: </label>
-      <input id="authorField" type="text" name="author" /><br>
-      <label for="genre">Genre: </label>
-      <input id="genreField" type="text" name="genre" /><br>
-      <label for="language">Language: </label>
-      <input id="langField" type="text" name="language" /><br>
-      <label for="country">Country: </label>
-      <input id="countryField" type="text" name="country" /><br>
-      <label for="year">Year: </label>
-      <input id="yearField" type="number" name="year" /><br><br>
-      <input type="submit" value="Add Book" />
-    </form><br><br>
-
-    <form id="setStatusForm" action="/setStatus" method="POST">
-      <label for="title">Title: </label>
-      <input id="titleField" type="text" name="title" /><br>
-      <select id="statusField">
-        <option value="unread">Unread</option>
-        <option value="toRead">To read</option>
-        <option value="read">Read</option>
-      </select>
-      <input type="submit" value="Set Status" />
-    </form><br><br>
-
+  <section id="top" class="m-3">
+    <a href="/docs">API Documentation</a>
+    <h3 class="title is-size-2">Book API</h3>
   </section>
-  <section id="content">
-  </section>
+  <!--div class="columns m-3"-->
+    <!--div class="is-one-fifth"-->
+    <div class="columns is-multiline is-centered">
+      <div class="column m-3 is-narrow">
+        <div class="card">
+          <header class="card-header has-background-link">
+            <p class="card-header-title has-text-white-ter">Get Books</p>
+          </header>
+          <div class="card-content">
+            <form id="getBooksForm" action="/getBooks" method="GET" name="booksForm">
+          <label for="title">Title: </label>
+          <input id="titleField" type="text" name="title" /><br>
+          <label for="author">Author: </label>
+          <input id="authorField" type="text" name="author" /><br>
+          <label for="genre">Genre: </label>
+          <input id="genreField" type="text" name="genre" /><br>
+          <label for="language">Language: </label>
+          <input id="langField" type="text" name="language" /><br>
+          <label for="country">Country: </label>
+          <input id="countryField" type="text" name="country" /><br>
+          <label for="year">Year: </label>
+          <input id="yearField" type="number" name="year" /><br>
+          <select id="methodSelect">
+            <option value="GET">GET</option>
+            <option value="HEAD">HEAD</option>
+          </select>
+          <input type="submit" value="Get Books" />
+          </form></div></div></div>
+      <div class="column m-3 is-narrow">
+        <div class="card">
+          <header class="card-header has-background-link">
+            <p class="card-header-title has-text-white-ter">Get Book by Title</p>
+        </header>
+        <div class="card-content">
+          <form id="getBookForm" action="/getBook" method="GET">
+            <label for="title">Title: </label>
+            <input id="titleField" type="text" name="title" /><br>
+            <select id="methodSelect">
+              <option value="GET">GET</option>
+              <option value="HEAD">HEAD</option>
+            </select>
+            <input type="submit" value="Get Book" />
+        </form></div></div></div>
+      <div class="column m-3 is-narrow">
+        <div class="card">
+          <header class="card-header has-background-link">
+          <p class="card-header-title has-text-white-ter">Get Random Book</p>
+        </header>
+        <div class="card-content">
+          <form id="randomForm" action="/getRandom" method="GET" name="randomForm">
+            <label for="author">Author: </label>
+            <input id="authorField" type="text" name="author" /><br>
+            <label for="genre">Genre: </label>
+            <input id="genreField" type="text" name="genre" /><br>
+            <label for="language">Language: </label>
+            <input id="langField" type="text" name="language" /><br>
+            <label for="country">Country: </label>
+            <input id="countryField" type="text" name="country" /><br>
+            <label for="year">Year: </label>
+            <input id="yearField" type="number" name="year" /><br>
+            <select id="methodSelect">
+              <option value="GET">GET</option>
+              <option value="HEAD">HEAD</option>
+            </select>
+            <input type="submit" value="Get Random Book" />
+        </form></div></div></div>
+      <div class="column m-3 is-narrow">
+        <div class="card">
+          <header class="card-header has-background-link">
+          <p class="card-header-title has-text-white-ter">Get Book Titles</p>
+        </header>
+        <div class="card-content">
+          <form id="getTitlesForm" action="/getTitles" method="GET">
+        <label for="author">Author: </label>
+        <input id="authorField" type="text" name="author" /><br>
+        <label for="genre">Genre: </label>
+        <input id="genreField" type="text" name="genre" /><br>
+        <label for="language">Language: </label>
+        <input id="langField" type="text" name="language" /><br>
+        <label for="country">Country: </label>
+        <input id="countryField" type="text" name="country" /><br>
+        <label for="year">Year: </label>
+        <input id="yearField" type="number" name="year" /><br>
+        <select id="methodSelect">
+          <option value="GET">GET</option>
+          <option value="HEAD">HEAD</option>
+        </select>
+        <input type="submit" value="Get Titles" />
+        </form></div></div></div>
+      <div class="column m-3 is-narrow">
+        <div class="card">
+          <header class="card-header has-background-link">
+          <p class="card-header-title has-text-white-ter">Add or Update a Book</p>
+        </header>
+        <div class="card-content">
+          <form id="addBookForm" action="/addBook" method="POST">
+        <label for="title">Title: </label>
+        <input id="titleField" type="text" name="title" /><br>
+        <label for="author">Author: </label>
+        <input id="authorField" type="text" name="author" /><br>
+        <label for="genre">Genre: </label>
+        <input id="genreField" type="text" name="genre" /><br>
+        <label for="language">Language: </label>
+        <input id="langField" type="text" name="language" /><br>
+        <label for="country">Country: </label>
+        <input id="countryField" type="text" name="country" /><br>
+        <label for="year">Year: </label>
+        <input id="yearField" type="number" name="year" /><br>
+        <input type="submit" value="Add Book" />
+        </form></div></div></div>
+      <div class="column m-3 is-narrow">
+        <div class="card">
+          <header class="card-header has-background-link">
+          <p class="card-header-title has-text-white-ter">Set a Book's Status</p>
+        </header>
+        <div class="card-content">
+          <form id="setStatusForm" action="/setStatus" method="POST">
+        <label for="title">Title: </label>
+        <input id="titleField" type="text" name="title" /><br>
+        <select id="statusField">
+          <option value="unread">Unread</option>
+          <option value="toRead">To read</option>
+          <option value="read">Read</option>
+        </select>
+        <input type="submit" value="Set Status" />
+        </form></div></div></div>
+    </div>
+    <div id="content" class="is-hidden">
+      <div class="card m-6 is-centered">
+        <header id="resultsHeader" class="card-header has-background-success">
+          <p id="resultsTitle" class="card-header-title has-text-success-invert"></p>
+        </header>
+        <div id="resultsContent" class="card-content is-family-code"></div>
+      </div>
+    </div>
+  <!--/div-->
 </body>
 </html>

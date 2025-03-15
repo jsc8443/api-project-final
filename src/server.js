@@ -91,6 +91,9 @@ const handleGet = (request, response, parsedUrl) => {
     case '/':
       htmlHandler.getIndex(request, response);
       break;
+    case '/docs':
+      htmlHandler.getDocs(request, response);
+      break;
     default:
       jsonHandler.notFound(request, response);
       break;
