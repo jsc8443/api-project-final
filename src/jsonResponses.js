@@ -1,10 +1,12 @@
 // "pretest": "eslint ./src --fix",      ripped from package.json to prevent "fixing"
 const fs = require('fs');
+// const { json } = require('stream/consumers');
 // const { request } = require('http');
 
 /// load json file -into-> memory
 // parse json data -into-> javascript object
 const booksJSON = JSON.parse(fs.readFileSync(`${__dirname}/../data/books.json`));
+// console.log(Array.isArray(booksJSON));
 
 const jsonRespon = (request, response, status, object) => {
   // const content = JSON.stringify(Object.values(object));
@@ -20,72 +22,72 @@ const jsonRespon = (request, response, status, object) => {
 };
 
 // book params: author, country, language, title, year, genre
-const filterFilterFilter = (query) => JSON.parse(JSON.stringify(
-  Object.values(booksJSON).filter((book) => (!query.author || query.author === book.author)
+const filter = (query) => booksJSON.filter((book) => (!query.author || query.author === book.author)
       && (!query.country || query.country === book.country)
       && (!query.language || query.language === book.language)
       && (!query.title || query.title === book.title)
       && (!query.year || Number(query.year) === book.year)
-      && (!query.genre || (book.genres && book.genres.includes(query.genre)))),
-));
+      && (!query.genre || (book.genres && book.genres.includes(query.genre))));
 
-// ISSUE: client page only displays values, missing keys
-//    --------> line 18, stringify in jsonRespon
-const findByTitle = (qTitle) => Object.values(booksJSON).find((book) => book.title === qTitle);
-
-// checks, throws errors for missing or non-existent title
-// helper method for addBook and setStatus
-const checkTitle = (title, status) => {
-  let responseJSON = {};
-  let statusCode = status;
+// const findByTitle = (qTitle) => Object.values(booksJSON).find((book) => book.title === qTitle);
+const findByTitle = (qTitle) => {
+  booksJSON.find((book) => book.title === qTitle);
+};
+// checks, sends errors for missing title params
+const missingTitleParam = (title) => {
+  // undefined --> falsy
+  // let responseJSON;// = undefined;?
   if (!title) {
-    responseJSON = {
-      message: 'Title is required.',
-      id: 'missingTitle',
+    return {
+      responseJSON: { message: 'Title is required.', id: 'missingTitle' },
+      statusCode: 400,
     };
-    statusCode = 400;
-    // return jsonRespon(request, response, 400, responseJSON);
-    // return responseJSON;
-  } else {
-    const titleSearchResults = findByTitle(title);
-    if (!titleSearchResults) { // check if book with that title exists
-      responseJSON = {
-        message: 'No book with that title exists.',
-        id: 'bookNotFound',
-      };
-      statusCode = 404;
-      // return jsonRespon(request, response, 404, responseJSON);
-      // return responseJSON;
-    } else {
-      responseJSON = titleSearchResults;
-    }
   }
-  // return titleSearchResults;
-  const responsePackage = {
-    responseJSON,
-    statusCode,
-  };
-  return responsePackage;
+  return null;
+};
+// finds book by title
+//   if no book exists, returns error
+const findBookOrError = (title, statusCode) => {
+  const book = findByTitle(title);
+  if (!book) {
+    return {
+      responseJSON: { message: 'No book with that title exists.', id: 'bookNotFound' },
+      statusCode: 404,
+    };
+  }
+  return { responseJSON: book, statusCode };
 };
 
+// checks, sends errors for missing or non-existent title
+// helper method for addBook and setStatus
+const checkTitle = (title, status) => missingTitleParam(title) || findBookOrError(title, status);
+
 const getBooks = (request, response) => {
-  const filterResults = filterFilterFilter(request.query);
+  const filterResults = filter(request.query);
   return jsonRespon(request, response, 200, filterResults);
 };
 const getRandom = (request, response) => {
-  const filterResults = filterFilterFilter(request.query);
-  const arrFilterResults = Object.values(filterResults);
+  const arrFilterResults = filter(request.query);
+  // const FilterResults = JSON.parse(JSON.stringify(arrfilterResults));
   // gets random book from filtered results
   const randomResult = arrFilterResults[Math.floor(Math.random() * (arrFilterResults.length))];
-  return jsonRespon(request, response, 200, JSON.parse(JSON.stringify(randomResult)));
+  return jsonRespon(request, response, 200, randomResult);
 };
 const getBook = (request, response) => {
   const { title } = request.query;
-  const responsePackage = checkTitle(title, 200);
-  return jsonRespon(request, response, responsePackage.statusCode, responsePackage.responseJSON);
+  /* const missingTitle = missingTitleParam(title);
+  if (missingTitle) { // missing title param
+    return jsonRespon(request, response, missingTitle.statusCode, missingTitle.responseJSON);
+  }
+
+  //const responsePackage = checkTitle(title, 200);
+  const responsePackage = findBookOrError(title, 200);
+  return jsonRespon(request, response, responsePackage.statusCode, responsePackage.responseJSON); */
+  const titlePackage = checkTitle(title, 200);
+  return jsonRespon(request, response, titlePackage.statusCode, titlePackage.responseJSON);
 };
 const getTitles = (request, response) => {
-  const filterResults = filterFilterFilter(request.query);
+  const filterResults = filter(request.query);
   const resultTitles = filterResults.map((book) => book.title);
   return jsonRespon(request, response, 200, resultTitles);
 };
@@ -96,12 +98,9 @@ const addBook = (request, response) => {
   const {
     title, author, genre, language, country, year,
   } = request.body;
-  if (!title) { // check if missing essential info
-    const responseJSON = {
-      message: 'Title is required.',
-      id: 'missingTitle',
-    };
-    return jsonRespon(request, response, 400, responseJSON);
+  const titleError = missingTitleParam(title);
+  if (titleError) {
+    return jsonRespon(request, response, titleError.statusCode, titleError.responseJSON);
   }
   const updateBook = findByTitle(title);
   if (updateBook) { // update existing book
@@ -115,25 +114,23 @@ const addBook = (request, response) => {
     author,
     country,
     language,
-    // ,
-    // pages,
     title,
-    // parseInt(year),    // year is string, shouldnt be
     year,
     genres: genre,
   };
   booksJSON[title] = newBook;
-  const responseJSON = { message: 'Created successfully' };
-  return jsonRespon(request, response, 201, responseJSON);
+  return jsonRespon(request, response, 201, { message: 'Created successfully' });
 };
 
 const setReadStatus = (request, response) => {
   const { title, readStatus } = request.body;
-  const responsePackage = checkTitle(title, 204);
-  if (responsePackage.statusCode === 204) {
-    responsePackage.responseJSON.readStatus = readStatus;
+  const titlePackage = checkTitle(title, 204);
+  if (titlePackage.statusCode === 204) { // book found -> update readStatus in database
+    const book = titlePackage.responseJSON;
+    book.readStatus = readStatus;
+    booksJSON[title] = book;
   }
-  return jsonRespon(request, response, responsePackage.statusCode, responsePackage.responseJSON);
+  return jsonRespon(request, response, titlePackage.statusCode, titlePackage.responseJSON);
 };
 
 const notFound = (request, response) => {
