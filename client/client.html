@@ -11,6 +11,7 @@
       const resultsHeader = document.querySelector('#resultsHeader');
       const resultsTitle = document.querySelector('#resultsTitle');
       const resultsContent = document.querySelector('#resultsContent');
+      resultsContent.innerHTML = "";
       /*const cardHeader = document.createElement('header');
       const resultsTitle = document.createElement('p');
       const resultsContent = document.createElement('p');
@@ -96,12 +97,12 @@
     };
     const requestSet = async (statusForm) => {
       const title = statusForm.querySelector('#titleField');
-      const status = statusForm.querySelector('#statusField');
+      const readStatus = statusForm.querySelector('#readStatusField');
 
-      const formData = `title=${title.value}&status=${status.value}`;
+      const formData = `title=${title.value}&status=${readStatus.value}`;
       console.log(formData);
 
-      let response = await fetch('/setStatus', {
+      let response = await fetch('/setReadStatus', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -153,7 +154,7 @@
       const getTitlesForm = document.querySelector("#getTitlesForm");
 
       const addBookForm = document.querySelector("#addBookForm");
-      const setStatusForm = document.querySelector("#setStatusForm");
+      const setReadStatusForm = document.querySelector("#setReadStatusForm");
       
       const getBooks = e => {
         e.preventDefault();
@@ -181,9 +182,9 @@
         requestAdd(addBookForm);
         return false;
       };
-      const setStatus = e => {
+      const setReadStatus = e => {
         e.preventDefault();
-        requestSet(setStatusForm);
+        requestSet(setReadStatusForm);
         return false;
       };
 
@@ -193,7 +194,7 @@
       getTitlesForm.addEventListener('submit', getTitles);
 
       addBookForm.addEventListener('submit', addBook);
-      setStatusForm.addEventListener('submit', setStatus);
+      setReadStatusForm.addEventListener('submit', setReadStatus);
     };
     window.onload = init;
   </script>
@@ -317,18 +318,18 @@
       <div class="column m-3 is-narrow">
         <div class="card">
           <header class="card-header has-background-link">
-          <p class="card-header-title has-text-white-ter">Set a Book's Status</p>
+          <p class="card-header-title has-text-white-ter">Set a Book's Read Status</p>
         </header>
         <div class="card-content">
-          <form id="setStatusForm" action="/setStatus" method="POST">
+          <form id="setReadStatusForm" action="/setReadStatus" method="POST">
         <label for="title">Title: </label>
         <input id="titleField" type="text" name="title" /><br>
-        <select id="statusField">
+        <select id="readStatusField">
           <option value="unread">Unread</option>
           <option value="toRead">To read</option>
           <option value="read">Read</option>
         </select>
-        <input type="submit" value="Set Status" />
+        <input type="submit" value="Set Read Status" />
         </form></div></div></div>
     </div>
     <div id="content" class="is-hidden">

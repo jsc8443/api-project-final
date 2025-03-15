@@ -63,8 +63,8 @@ const handlePost = (request, response, parsedUrl) => {
     case '/addBook':
       parseBody(request, response, jsonHandler.addBook);
       break;
-    case '/setStatus':
-      parseBody(request, response, jsonHandler.setStatus);
+    case '/setReadStatus':
+      parseBody(request, response, jsonHandler.setReadStatus);
       break;
     default:
       jsonHandler.notFound(request, response);
