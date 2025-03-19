@@ -29,9 +29,11 @@ const filter = (query) => booksJSON.filter((book) => (!query.author || query.aut
       && (!query.year || Number(query.year) === book.year)
       && (!query.genre || (book.genres && book.genres.includes(query.genre))));
 
-// const findByTitle = (qTitle) => Object.values(booksJSON).find((book) => book.title === qTitle);
+// 
 const findByTitle = (qTitle) => {
-  booksJSON.find((book) => book.title === qTitle);
+  //booksJSON.find((book) => book.title === qTitle);
+  const index = booksJSON.findIndex((book) => book.title === qTitle);
+  return index !== -1 ? { book: booksJSON[index], index } : null;
 };
 // checks, sends errors for missing title params
 const missingTitleParam = (title) => {
