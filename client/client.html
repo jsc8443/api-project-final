@@ -99,7 +99,7 @@
       const title = statusForm.querySelector('#titleField');
       const readStatus = statusForm.querySelector('#readStatusField');
 
-      const formData = `title=${title.value}&status=${readStatus.value}`;
+      const formData = `title=${title.value}&readStatus=${readStatus.value}`;
       console.log(formData);
 
       let response = await fetch('/setReadStatus', {

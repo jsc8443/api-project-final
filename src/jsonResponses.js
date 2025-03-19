@@ -21,17 +21,17 @@ const jsonRespon = (request, response, status, object) => {
   response.end();
 };
 
-// book params: author, country, language, title, year, genre
+// book params: author, country, language, title, year, genres
 const filter = (query) => booksJSON.filter((book) => (!query.author || query.author === book.author)
       && (!query.country || query.country === book.country)
       && (!query.language || query.language === book.language)
       && (!query.title || query.title === book.title)
       && (!query.year || Number(query.year) === book.year)
-      && (!query.genre || (book.genres && book.genres.includes(query.genre))));
+      && (!query.genres || (book.genres && book.genres.includes(query.genres))));
 
-// 
+// returns copy of book object, and index in book array
 const findByTitle = (qTitle) => {
-  //booksJSON.find((book) => book.title === qTitle);
+  // booksJSON.find((book) => book.title === qTitle);
   const index = booksJSON.findIndex((book) => book.title === qTitle);
   return index !== -1 ? { book: booksJSON[index], index } : null;
 };
@@ -50,18 +50,21 @@ const missingTitleParam = (title) => {
 // finds book by title
 //   if no book exists, returns error
 const findBookOrError = (title, statusCode) => {
-  const book = findByTitle(title);
-  if (!book) {
+  const titlePackage = findByTitle(title);
+  // const { book } = titlePackage;
+  if (!titlePackage) {
     return {
       responseJSON: { message: 'No book with that title exists.', id: 'bookNotFound' },
       statusCode: 404,
     };
   }
-  return { responseJSON: book, statusCode };
+  // return { responseJSON: book, statusCode };
+  return { responseJSON: titlePackage, statusCode };
 };
 
 // checks, sends errors for missing or non-existent title
 // helper method for addBook and setStatus
+// possible status code returns: 400 || 404 || given
 const checkTitle = (title, status) => missingTitleParam(title) || findBookOrError(title, status);
 
 const getBooks = (request, response) => {
@@ -86,7 +89,10 @@ const getBook = (request, response) => {
   const responsePackage = findBookOrError(title, 200);
   return jsonRespon(request, response, responsePackage.statusCode, responsePackage.responseJSON); */
   const titlePackage = checkTitle(title, 200);
-  return jsonRespon(request, response, titlePackage.statusCode, titlePackage.responseJSON);
+  const responseBook = titlePackage.responseJSON.book;
+  // const responsePackage = responseBook ? responseBook : titlePackage.responseJSON;
+  const responsePackage = responseBook || titlePackage.responseJSON;
+  return jsonRespon(request, response, titlePackage.statusCode, responsePackage);
 };
 const getTitles = (request, response) => {
   const filterResults = filter(request.query);
@@ -94,43 +100,47 @@ const getTitles = (request, response) => {
   return jsonRespon(request, response, 200, resultTitles);
 };
 
-// could be refactored with checkTitle helper,
-//  but would have to split that into two helpers
+// avoid overwriting, perhaps with Array.filter() ?
 const addBook = (request, response) => {
   const {
-    title, author, genre, language, country, year,
+    title, author, genres, language, country, year, pages, link,
   } = request.body;
-  const titleError = missingTitleParam(title);
-  if (titleError) {
-    return jsonRespon(request, response, titleError.statusCode, titleError.responseJSON);
-  }
-  const updateBook = findByTitle(title);
-  if (updateBook) { // update existing book
-    updateBook.genres = genre;
-    updateBook.language = language;
-    updateBook.country = country;
-    updateBook.year = year;
-    return jsonRespon(request, response, 204, updateBook);
-  }
-  const newBook = {
+  // check for missing title param, check if title already exists
+  const titleSearch = checkTitle(title, 204); // 204 code: title is valid and exists (update book)
+  let finalStatusCode = titleSearch.statusCode;
+  let { responseJSON } = titleSearch;
+  const tempBook = {
     author,
     country,
     language,
+    link,
+    pages,
     title,
     year,
-    genres: genre,
+    genres,
   };
-  booksJSON[title] = newBook;
-  return jsonRespon(request, response, 201, { message: 'Created successfully' });
+  if (finalStatusCode === 404) { // book not found -> new book
+    finalStatusCode = 201; // correct status code
+    responseJSON = { message: 'Created successfully' }; // change response content/message
+    // push new book to array
+    booksJSON.push(tempBook);
+  } else if (finalStatusCode === 204) { // book found -> update book
+    // update array with updated book
+    booksJSON[responseJSON.index] = tempBook;
+    // response content
+    responseJSON = tempBook;
+  }
+  return jsonRespon(request, response, finalStatusCode, responseJSON);
 };
 
 const setReadStatus = (request, response) => {
   const { title, readStatus } = request.body;
   const titlePackage = checkTitle(title, 204);
   if (titlePackage.statusCode === 204) { // book found -> update readStatus in database
-    const book = titlePackage.responseJSON;
-    book.readStatus = readStatus;
-    booksJSON[title] = book;
+    const { book } = titlePackage.responseJSON;
+    book.status = readStatus;
+    booksJSON[titlePackage.responseJSON.index] = book;
+    // booksJSON[titlePackage.responseJSON.index].readStatus = readStatus;
   }
   return jsonRespon(request, response, titlePackage.statusCode, titlePackage.responseJSON);
 };
