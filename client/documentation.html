@@ -3,11 +3,82 @@
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 </head>
 <body>
-  <section id="top">
-  <a href="/">Homepage</a>
-  <h3>documentation goes here</h3>
+  <section id="top" class="m-3">
+    <a href="/">Homepage</a>
+    <h3 class="title is-size-2">Book API Documentation</h3>
   </section>
+  <div class="columns is-multiline is-centered">
+    <div class="column m-3 is-narrow">
+      <div class="card">
+        <header class="card-header has-background-link">
+          <p class="card-header-title has-text-white-ter">Get Books - /getBooks - HEAD GET</p>
+        </header>
+        <div class="card-content">
+          <h5 class="title is-5">Query Params</h5>
+          <p>author (string, optional) - An author name to filter by</p>
+          <p>genre (string, optional) - A genre to filter by</p>
+          <p>language (string, optional) - A language to filter by</p>
+          <p>country (string, optional) - A country to filter by</p>
+          <p>year (number, optional) - A release year to filter by</p>
+          <h5 class="title is-5">Returns</h5>
+          <p>A JSON array of book objects</p>
+          <p>Format: <span class="has-background-grey-lighter is-family-code">
+            [{author: string, country: string,<br>
+            language: string, link: string,<br>
+            pages: number, title: string,<br>
+            year: number, genres?: [string],<br>
+            readStatus?: string }]</span></p>
+          <h5 class="title is-5">Examples</h5>
+          <p>Format:<span class="return-wrap has-background-grey-lighter is-family-code m-3">
+            [{author: string, country: string, language: string, link: string, pages: number,
+            title: string, year: number, genres?: [string], readStatus?: string}]</span></p>
+          </div></div></div>
+    <div class="column m-3 is-narrow">
+      <div class="card">
+        <header class="card-header has-background-link">
+          <p class="card-header-title has-text-white-ter">Get Book by Title</p>
+      </header>
+      <div class="card-content">
+        </div></div></div>
+    <div class="column m-3 is-narrow">
+      <div class="card">
+        <header class="card-header has-background-link">
+        <p class="card-header-title has-text-white-ter">Get Random Book</p>
+      </header>
+      <div class="card-content">
+        </div></div></div>
+    <div class="column m-3 is-narrow">
+      <div class="card">
+        <header class="card-header has-background-link">
+        <p class="card-header-title has-text-white-ter">Get Book Titles</p>
+      </header>
+      <div class="card-content">
+        </div></div></div>
+    <div class="column m-3 is-narrow">
+      <div class="card">
+        <header class="card-header has-background-link">
+        <p class="card-header-title has-text-white-ter">Add or Update a Book</p>
+      </header>
+      <div class="card-content">
+        </div></div></div>
+    <div class="column m-3 is-narrow">
+      <div class="card">
+        <header class="card-header has-background-link">
+        <p class="card-header-title has-text-white-ter">Set a Book's Read Status</p>
+      </header>
+      <div class="card-content">
+        </div></div></div>
+  </div>
+  <div id="content" class="is-hidden">
+    <div class="card m-6 is-centered">
+      <header id="resultsHeader" class="card-header has-background-success">
+        <p id="resultsTitle" class="card-header-title has-text-success-invert"></p>
+      </header>
+      <div id="resultsContent" class="card-content is-family-code"></div>
+    </div>
+  </div>
 </body>
 </html>

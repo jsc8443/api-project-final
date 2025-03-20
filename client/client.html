@@ -120,17 +120,17 @@
       const title = getForm.querySelector('#titleField');
       const author = getForm.querySelector('#authorField');
 
-      if (title) {    // WATCH OUT FOR FALSY VALUES !!!!!!!!!!!!!
+      if (title) {
         formData += `title=${title.value}`;
       }
       if (author) {
+        if (title) {
+          formData += '&';
+        }
         const genre = getForm.querySelector('#genreField');
         const language = getForm.querySelector('#langField');
         const country = getForm.querySelector('#countryField');
         const year = getForm.querySelector('#yearField');
-        if (title) {
-          formData += '&';
-        }
         formData += `author=${author.value}&genre=${genre.value}&language=${language.value}&country=${country.value}&year=${year.value}`;
       }
       //console.log(formData);
@@ -202,7 +202,7 @@
 <!--body class="has-background-grey-lighter"-->
 <body>
   <section id="top" class="m-3">
-    <a href="/docs">API Documentation</a>
+    <a href="/docs">Documentation</a>
     <h3 class="title is-size-2">Book API</h3>
   </section>
   <!--div class="columns m-3"-->
@@ -215,8 +215,6 @@
           </header>
           <div class="card-content">
             <form id="getBooksForm" action="/getBooks" method="GET" name="booksForm">
-          <label for="title">Title: </label>
-          <input id="titleField" type="text" name="title" /><br>
           <label for="author">Author: </label>
           <input id="authorField" type="text" name="author" /><br>
           <label for="genre">Genre: </label>
