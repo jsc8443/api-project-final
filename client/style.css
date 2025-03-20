@@ -24,7 +24,8 @@
 }
 
 .return-wrap {
-  position: absolute;
+  /*position: absolute;*/
+  word-break:break-all;
 }
 
 

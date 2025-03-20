@@ -11,60 +11,62 @@
     <h3 class="title is-size-2">Book API Documentation</h3>
   </section>
   <div class="columns is-multiline is-centered">
-    <div class="column m-3 is-narrow">
+    <div class="column m-3 is-one-third">
       <div class="card">
         <header class="card-header has-background-link">
           <p class="card-header-title has-text-white-ter">Get Books - /getBooks - HEAD GET</p>
         </header>
         <div class="card-content">
-          <h5 class="title is-5">Query Params</h5>
-          <p>author (string, optional) - An author name to filter by</p>
-          <p>genre (string, optional) - A genre to filter by</p>
-          <p>language (string, optional) - A language to filter by</p>
-          <p>country (string, optional) - A country to filter by</p>
-          <p>year (number, optional) - A release year to filter by</p>
-          <h5 class="title is-5">Returns</h5>
-          <p>A JSON array of book objects</p>
-          <p>Format: <span class="has-background-grey-lighter is-family-code">
-            [{author: string, country: string,<br>
-            language: string, link: string,<br>
-            pages: number, title: string,<br>
-            year: number, genres?: [string],<br>
+          <h5 class="title is-5 my-1">Query Params</h5>
+          <p class="ml-2 mb-4">author (string, optional) - An author name to filter by<br>
+          genre (string, optional) - A genre to filter by<br>
+          language (string, optional) - A language to filter by<br>
+          country (string, optional) - A country to filter by<br>
+          year (number, optional) - A release year to filter by</p>
+          <h5 class="title is-5 my-2">Returns</h5>
+          <p class="ml-2 mb-4">A JSON array of book objects<br>
+          Format: <span class="has-background-grey-lighter is-family-code">
+            [{author: string, country: string,
+            language: string, link: string,
+            pages: number, title: string,
+            year: number, genres?: [string],
             readStatus?: string }]</span></p>
-          <h5 class="title is-5">Examples</h5>
-          <p>Format:<span class="return-wrap has-background-grey-lighter is-family-code m-3">
-            [{author: string, country: string, language: string, link: string, pages: number,
-            title: string, year: number, genres?: [string], readStatus?: string}]</span></p>
+          <h5 class="title is-5 my-3">Examples</h5>
+          <p class="ml-2">Request: <span class="return-wrap has-background-grey-lighter is-family-code m-3">
+            /getBooks?author=William%20Faulkner&genre=&language=&country=&year=</span><br>
+            Result: <span class="return-wrap has-background-grey-lighter is-family-code m-3">
+              [{"author":"William Faulkner","country":"United States","language":"English","link":"https://en.wikipedia.org/wiki/Absalom,_Absalom!\n","pages":313,"title":"Absalom, Absalom!","year":1936,"genres":["Southern Gothic","Historical Fiction"]},{"author":"William Faulkner","country":"United States","language":"English","link":"https://en.wikipedia.org/wiki/The_Sound_and_the_Fury\n","pages":326,"title":"The Sound and the Fury","year":1929,"genres":["Southern Gothic","Modernism"]}]
+            </span></p>
           </div></div></div>
-    <div class="column m-3 is-narrow">
+    <div class="column m-3 is-one-third">
       <div class="card">
         <header class="card-header has-background-link">
           <p class="card-header-title has-text-white-ter">Get Book by Title</p>
       </header>
       <div class="card-content">
         </div></div></div>
-    <div class="column m-3 is-narrow">
+    <div class="column m-3 is-one-third">
       <div class="card">
         <header class="card-header has-background-link">
         <p class="card-header-title has-text-white-ter">Get Random Book</p>
       </header>
       <div class="card-content">
         </div></div></div>
-    <div class="column m-3 is-narrow">
+    <div class="column m-3 is-one-third">
       <div class="card">
         <header class="card-header has-background-link">
         <p class="card-header-title has-text-white-ter">Get Book Titles</p>
       </header>
       <div class="card-content">
         </div></div></div>
-    <div class="column m-3 is-narrow">
+    <div class="column m-3 is-one-third">
       <div class="card">
         <header class="card-header has-background-link">
         <p class="card-header-title has-text-white-ter">Add or Update a Book</p>
       </header>
       <div class="card-content">
         </div></div></div>
-    <div class="column m-3 is-narrow">
+    <div class="column m-3 is-one-third">
       <div class="card">
         <header class="card-header has-background-link">
         <p class="card-header-title has-text-white-ter">Set a Book's Read Status</p>
