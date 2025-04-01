@@ -15,8 +15,8 @@
       <div class="card">
         <header class="card-header has-background-link">
           <p class="card-header-title has-text-white-ter">Get Books - /getBooks -
-            <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">HEAD</span>
-            <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">GET</span></p>
+            <span class="mx-1 tag is-white has-text-link">HEAD</span>
+            <span class="mx-1 tag is-white has-text-link">GET</span></p>
         </header>
         <div class="card-content">
           <h5 class="title is-5 my-1">Query Params</h5>
@@ -47,12 +47,12 @@
       <div class="card">
         <header class="card-header has-background-link">
           <p class="card-header-title has-text-white-ter">Get Book by Title - /getBook - 
-            <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">HEAD</span>
-            <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">GET</span></p>
+            <span class="mx-1 tag is-white has-text-link">HEAD</span>
+            <span class="mx-1 tag is-white has-text-link">GET</span></p>
       </header>
       <div class="card-content">
         <h5 class="title is-5 my-1">Query Params</h5>
-        <p class="ml-2 mb-4">title (string, optional) - The title of the film</p>
+        <p class="ml-2 mb-4">title (string, optional) - The title of the book</p>
         <h5 class="title is-5 my-2">Returns</h5>
         <p class="ml-2 mb-4">A JSON book object<br>
         Format: <span class="has-background-grey-lighter is-family-code">
@@ -73,8 +73,8 @@
       <div class="card">
         <header class="card-header has-background-link">
         <p class="card-header-title has-text-white-ter">Get Random Book - /getRandom -
-          <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">HEAD</span>
-          <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">GET</span></p>
+          <span class="mx-1 tag is-white has-text-link">HEAD</span>
+          <span class="mx-1 tag is-white has-text-link">GET</span></p>
       </header>
       <div class="card-content">
         <h5 class="title is-5 my-1">Query Params</h5>
@@ -104,16 +104,18 @@
       <div class="card">
         <header class="card-header has-background-link">
         <p class="card-header-title has-text-white-ter">Get Book Titles - /getTitles -
-          <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">HEAD</span>
-          <span class="mx-1 px-1 has-background-white-ter has-text-link is-family-code">GET</span></p>
+          <span class="mx-1 tag is-white has-text-link">HEAD</span>
+          <span class="mx-1 tag is-white has-text-link">GET</span></p>
       </header>
       <div class="card-content">
-        <h5 class="title is-5 my-1">Query Params</h5>
-          <p class="ml-2 mb-4">author (string, optional) - An author name to filter by<br>
-          genre (string, optional) - A genre to filter by<br>
-          language (string, optional) - A language to filter by<br>
-          country (string, optional) - A country to filter by<br>
-          year (number, optional) - A release year to filter by</p>
+        <h5 class="title is-5 my-1">Body Params</h5>
+          <p class="ml-2 mb-4">
+            title (string, optional) - The title of the book<br>
+            author (string, optional) - The author of the book<br>
+            genre (string, optional) - A genre of the book<br>
+            language (string, optional) - The language the book is written in<br>
+            country (string, optional) - The country the book was written in<br>
+            year (number, optional) - The release year of the book</p>
           <h5 class="title is-5 my-2">Returns</h5>
           <p class="ml-2 mb-4">A JSON array of book objects<br>
           Format: <span class="has-background-grey-lighter is-family-code">
@@ -137,6 +139,28 @@
         <p class="card-header-title has-text-white-ter">Add or Update a Book</p>
       </header>
       <div class="card-content">
+        <h5 class="title is-5 my-1">Query Params</h5>
+        <p class="ml-2 mb-4">author (string, optional) - An author name to filter by<br>
+        genre (string, optional) - A genre to filter by<br>
+        language (string, optional) - A language to filter by<br>
+        country (string, optional) - A country to filter by<br>
+        year (number, optional) - A release year to filter by</p>
+        <h5 class="title is-5 my-2">Returns</h5>
+        <p class="ml-2 mb-4">A JSON array of book objects<br>
+        Format: <span class="has-background-grey-lighter is-family-code">
+          [{author: string, country: string,
+          language: string, link: string,
+          pages: number, title: string,
+          year: number, genres?: [string],
+          readStatus?: string }]</span></p>
+        <h5 class="title is-5 my-3">Examples</h5>
+        <p class="ml-2">Request: <span class="return-wrap has-background-grey-lighter is-family-code">
+          /getTitles?author=&genre=&language=&country=Russia&year=</span><br>
+          Result: <span class="return-wrap has-background-grey-lighter is-family-code">
+            ["Stories","Crime and Punishment","The Idiot","The Possessed",
+            "The Brothers Karamazov","Dead Souls","War and Peace","Anna Karenina",
+            "The Death of Ivan Ilyich"]
+          </span></p>
         </div></div></div>
     <div class="column m-1 is-two-thirds">
       <div class="card">
